@@ -5,7 +5,7 @@ NAME
 SYNOPSIS
         # In your configuration file
         rootproperty=blah
-    
+
         [section]
         one=twp
         three= four
@@ -43,7 +43,9 @@ DESCRIPTION
     This module is primarily for reading human written files, and anything
     we write shouldn't need to have documentation/comments. If you need
     something with more power, move up to Config::Simple, Config::General or
-    one of the many other Config:: modules.
+    one of the many other Config:: modules. To rephrase, Config::Tiny does
+    not preserve your comments, whitespace, or the order of your config
+    file.
 
 CONFIGURATION FILE SYNTAX
     Files are the same as windows .ini files, for example.
@@ -53,11 +55,12 @@ CONFIGURATION FILE SYNTAX
             var2=value2
 
     If a property is outside of a section, it will be assigned to the root
-    section, available at "$Config-"{_}>.
+    section, available at "$Config->{_}".
 
-    Lines starting with '#' or ';' are comments.
+    Lines starting with '#' or ';' are comments, and blank lines are
+    ignored.
 
-    When writing back to the config file, any comments etc are discarded.
+    When writing back to the config file, any comments are discarded.
 
 METHODS
   new()
@@ -66,8 +69,9 @@ METHODS
 
   read( $filename )
     The "read()" constructor reads a config file, and returns a new
-    Config::Tiny object containing the properties in the file. Returns the
-    object on success. Returns "undef" on error.
+    Config::Tiny object containing the properties in the file.
+
+    Returns the object on success, or "undef" on error.
 
   read_string( $string );
     The "read_string()" takes as argument the contents of a config file as a
@@ -75,7 +79,9 @@ METHODS
 
   write()
     The "write( $filename )" generates the file for the properties, and
-    writes it to disk. Returns true on success. Returns "undef" on error.
+    writes it to disk.
+
+    Returns true on success or "undef" on error.
 
   write_string()
     Generates the file for the object and returns it as a string.
@@ -87,6 +93,16 @@ METHODS
 SUPPORT
     Contact the author
 
+TO DO
+    I'm debating adding a get and set method to get or set a section.key
+    based value...
+
+    To make this smaller still, it could be implemented in C/XS, although
+    this would destroy portability. I nominate the namespace Config::Tinier
+    for this.
+
+    Implementation is left as an exercise for the reader.
+
 AUTHOR
             Adam Kennedy ( maintainer )
             cpan@ali.as
@@ -96,7 +112,7 @@ AUTHOR
     inspired this module.
 
 SEE ALSO
-    "Config::Simple", "Config::General"
+    Config::Simple, Config::General
 
 COPYRIGHT
     Copyright (c) 2002 Adam Kennedy. All rights reserved. This program is

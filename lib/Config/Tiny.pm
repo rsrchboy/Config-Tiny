@@ -7,12 +7,12 @@ use strict;
 
 use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = 1.0;
+	$VERSION = 1.2;
 	$errstr = '';
 }
 
 # Create an empty object
-sub new { bless { }, $_[0] }
+sub new { bless {}, shift }
 
 # Create an object from a file
 sub read {
@@ -24,30 +24,25 @@ sub read {
 	return $class->_error( "'$file' is a directory, not a file" ) unless -f $file;
 	return $class->_error( "Insufficient permissions to read '$file'" ) unless -r $file;
 
-	# Read in the file
+	# Slurp in the file
 	local $/ = undef;
 	open( CFG, $file ) or return $class->_error( "Failed to open file '$file': $!" );
 	my $contents = <CFG>;
 	close( CFG );
 
-	# Parse and return
-	return $class->read_string( $contents );
-}	
+	$class->read_string( $contents );
+}
 
 # Create an object from a string
 sub read_string {
-	my $class = shift;
-	my $string = shift;
+	my $self = bless {}, shift;
 
-	# Create the empty object
-	my $self = bless {}, $class;
-	
 	# Parse the file
 	my $ns = '_';
 	my $counter = 0;
-	foreach ( split /(?:\015\012|\015|\012)/, $string ) {
+	foreach ( split /(?:\015\012|\015|\012)/, shift ) {
 		$counter++;
-		
+
 		# Skip comments and empty lines
 		next if /^\s*(?:\#|\;)/ || /^\s*$/;
 
@@ -56,17 +51,17 @@ sub read_string {
 			$ns = $1;
 			next;
 		}
-		
+
 		# Handle properties
 		if ( /^\s*([^=]+?)\s*=\s*(.*)/ ) {
 			$self->{$ns}->{$1} = $2;
 			next;
 		}
-		
-		return $self->_error( "Syntax error at line $counter: $_" );
+
+		return $self->_error( "Syntax error at line $counter: '$_'" );
 	}
-	
-	return $self;
+
+	$self;
 }
 
 # Save an object to a file
@@ -74,22 +69,19 @@ sub write {
 	my $self = shift;
 	my $file = shift or return $self->_error( 'No file name provided' );
 
-	# Get the contents of the file
-	my $contents = $self->write_string();
-	
 	# Write it to the file
-	open ( CFG, ">$file" )
+	open ( CFG, ">$file" ) 
 		or return $self->_error( "Failed to open file '$file' for writing: $!" );
-	print CFG $contents;
+	print CFG $self->write_string;
 	close( CFG );
 
-	return 1;	
+	1;
 }
 
 # Save an object to a string
 sub write_string {
 	my $self = shift;
-	
+
 	my $contents = '';
 	foreach my $section ( sort { (($b eq '_') <=> ($a eq '_')) || ($a cmp $b) } keys %$self ) {
 		my $block = $self->{$section};
@@ -100,12 +92,12 @@ sub write_string {
 		}
 	}
 	
-	return $contents;
+	$contents;
 }
-	
+
 # Error handling
 sub errstr { $errstr }
-sub _error { $errstr = $_[1]; return undef }
+sub _error { $errstr = $_[1]; undef }
 
 1;
 
@@ -121,7 +113,7 @@ Config::Tiny - Read/Write .ini style files with as little code as possible
 
     # In your configuration file
     rootproperty=blah
-    
+
     [section]
     one=twp
     three= four
@@ -160,7 +152,8 @@ at least kept in mind.
 This module is primarily for reading human written files, and anything we
 write shouldn't need to have documentation/comments. If you need something
 with more power, move up to Config::Simple, Config::General or one of the
-many other Config:: modules.
+many other Config:: modules. To rephrase, Config::Tiny does not preserve
+your comments, whitespace, or the order of your config file.
 
 =head1 CONFIGURATION FILE SYNTAX
 
@@ -170,12 +163,12 @@ Files are the same as windows .ini files, for example.
 	var1=value1
 	var2=value2
 
-If a property is outside of a section, it will be assigned to the root 
-section, available at C<$Config->{_}>.
+If a property is outside of a section, it will be assigned to the root
+section, available at C<$Config-E<gt>{_}>.
 
-Lines starting with '#' or ';' are comments.
+Lines starting with '#' or ';' are comments, and blank lines are ignored.
 
-When writing back to the config file, any comments etc are discarded.
+When writing back to the config file, any comments are discarded.
 
 =head1 METHODS
 
@@ -186,8 +179,9 @@ The constructor C<new()> creates and returns an empty Config::Tiny object.
 =head2 read( $filename )
 
 The C<read()> constructor reads a config file, and returns a new Config::Tiny
-object containing the properties in the file. Returns the object on success.
-Returns C<undef> on error.
+object containing the properties in the file. 
+
+Returns the object on success, or C<undef> on error.
 
 =head2 read_string( $string );
 
@@ -197,7 +191,9 @@ and returns the Config::Tiny object for it.
 =head2 write()
 
 The C<write( $filename )> generates the file for the properties, and writes it
-to disk. Returns true on success. Returns C<undef> on error.
+to disk. 
+
+Returns true on success or C<undef> on error.
 
 =head2 write_string()
 
@@ -212,18 +208,28 @@ C<$Config::Tiny::errstr> variable, or using the C<errstr()> method.
 
 Contact the author
 
+=head1 TO DO
+
+I'm debating adding a get and set method to get or set a section.key based
+value...
+
+To make this smaller still, it could be implemented in C/XS, although this
+would destroy portability. I nominate the namespace Config::Tinier for this.
+
+Implementation is left as an exercise for the reader.
+
 =head1 AUTHOR
 
         Adam Kennedy ( maintainer )
         cpan@ali.as
         http://ali.as/
 
-Thanks to Sherzod Ruzmetov <sherzodr@cpan.org> for Config::Simple, which 
-inspired this module.
+Thanks to Sherzod Ruzmetov <sherzodr@cpan.org> for Config::Simple,
+which inspired this module.
 
 =head1 SEE ALSO
 
-C<Config::Simple>, C<Config::General>
+L<Config::Simple>, L<Config::General>
 
 =head1 COPYRIGHT
 

@@ -6,10 +6,10 @@ WriteMakefile(
 	'PREREQ_PM'    => {
 		Test::More => 0,
 		FindBin    => 0,
-		
-	},	
+
+	},
 	($] >= 5.005) ? (
-		'AUTHOR'   => 'Adam Kennedy (adam@ali.as)',
+		'AUTHOR'   => 'Adam Kennedy (cpan@ali.as)',
 		'ABSTRACT' => 'Read/Write .ini style files with as little code as possible',
 	) : (),
 );

@@ -3,7 +3,7 @@
 # Formal testing for Config::Tiny
 
 use strict;
-use lib '../../../modules'; # For development testing
+use lib '../../modules'; # For development testing
 use lib '../lib'; # For installation testing
 use UNIVERSAL 'isa';
 use Test::More tests => 23;

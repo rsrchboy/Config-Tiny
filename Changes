@@ -1,5 +1,15 @@
 Revision history for Perl extension Config::Tiny
 
+1.2  Wed Aug 12 15:51:12 2003
+    - Applied a variety of small changed designed to reduce the number of
+      opcodes generated, without changing the functionality.
+      This should save a few K in load overhead.
+
+1.1  Wed Apr 23 22:56:21 2003
+    - When reporting a bad line, put single quotes around the
+      lines contents in the error message.
+    - Small updates to the pod documentation
+
 1.0  Sat Dec 21 11:53:51 2002
     - Removed file locking, since we read/write virtually atomically now
     - Removed mode support from ->write() it was erroneous
