@@ -7,7 +7,7 @@ use strict;
 
 use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = 1.2;
+	$VERSION = 1.3;
 	$errstr = '';
 }
 
@@ -53,7 +53,7 @@ sub read_string {
 		}
 
 		# Handle properties
-		if ( /^\s*([^=]+?)\s*=\s*(.*)/ ) {
+		if ( /^\s*([^=]+?)\s*=\s*(.*?)\s*$/ ) {
 			$self->{$ns}->{$1} = $2;
 			next;
 		}
@@ -233,7 +233,7 @@ L<Config::Simple>, L<Config::General>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2002 Adam Kennedy. All rights reserved.
+Copyright (c) 2002-2003 Adam Kennedy. All rights reserved.
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
 

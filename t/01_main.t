@@ -64,6 +64,7 @@ my $expected = {
 		},
 	'Section Two' => {
 		'something else' => 'blah',
+		'remove' => 'whitespace',
 		},
 	};
 bless $expected, 'Config::Tiny';

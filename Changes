@@ -1,5 +1,9 @@
 Revision history for Perl extension Config::Tiny
 
+1.3  Fri Nov 7 2003
+    - Slightly altered a regex so that trailing whitespace in properties
+      is dropped.
+
 1.2  Wed Aug 12 15:51:12 2003
     - Applied a variety of small changed designed to reduce the number of
       opcodes generated, without changing the functionality.
