@@ -1,0 +1,104 @@
+NAME
+    Config::Tiny - Read/Write .ini style files with as little code as
+    possible
+
+SYNOPSIS
+        # In your configuration file
+        rootproperty=blah
+    
+        [section]
+        one=twp
+        three=four
+        Foo=Bar
+        empty=
+
+        # In your program
+        use Config::Tiny;
+
+            # Create a config
+            my $Config = Config::Tiny->new();
+
+            # Open the config
+            $Config = Config::Tiny->read( 'file.conf' );
+
+        # Reading properties
+        my $rootproperty = $Config->{_}->{rootproperty};
+        my $one = $Config->{section}->{one};
+        my $Foo = $Config->{section}->{Foo};
+
+        # Changing data
+            $Config->{newsection} = { this => 'that' }; # Add a section
+            $Config->{section}->{Foo} = 'Not Bar!';     # Change a value
+            delete $Config->{_};                        # Delete a value or section
+
+        # Save a config
+        $Config->write( 'file.conf' );
+
+DESCRIPTION
+    Config::Tiny is a perl class to read and write .ini style configuration
+    files with as little code as possible, reducing load time and memory
+    overhead. Memory usage is normally scoffed at in Perl, but in my opinion
+    should be at least kept in mind.
+
+    This module is primarily for reading human written files, and anything
+    we write shouldn't need to have documentation/comments. If you need
+    something with more power, move up to Config::Simple, Config::General or
+    one of the many other Config:: modules.
+
+CONFIGURATION FILE SYNTAX
+    Files are the same as windows .ini files, for example.
+
+            [section]
+            var1=value1
+            var2=value2
+
+    If a property is outside of a section, it will be assigned to the root
+    section, available at "$Config-"{_}>.
+
+    Lines starting with '#' or ';' are comments.
+
+    When writing back to the config file, any comments etc are discarded.
+
+METHODS
+  new()
+    The constructor "new()" creates and returns an empty Config::Tiny
+    object.
+
+  read( $filename )
+    The "read()" constructor reads a config file, and returns a new
+    Config::Tiny object containing the properties in the file. Returns the
+    object on success. Returns "undef" on error.
+
+  write()
+    The "write( $filename )" generates the file for the properties, and
+    writes it to disk. Returns true on success. Returns "undef" on error.
+
+  write_string()
+    Generates the file for the object and returns it as a string.
+
+  errstr()
+    When an error occurs, you can retrieve the error message either from the
+    $Config::Tiny::errstr variable, or using the "errstr()" method.
+
+SUPPORT
+    Contact the author
+
+AUTHOR
+            Adam Kennedy ( maintainer )
+            cpan@ali.as
+            http://ali.as/
+
+    Thanks to Sherzod Ruzmetov <sherzodr@cpan.org> for Config::Simple, which
+    inspired this module.
+
+SEE ALSO
+    "Config::Simple", "Config::General"
+
+COPYRIGHT
+    Copyright (c) 2002 Adam Kennedy. All rights reserved. This program is
+    free software; you can redistribute it and/or modify it under the same
+    terms as Perl itself.
+
+    The full text of the license can be found in the LICENSE file included
+    with this module.
+
