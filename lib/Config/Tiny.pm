@@ -7,7 +7,7 @@ use strict;
 
 use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = '2.00';
+	$VERSION = '2.01';
 	$errstr  = '';
 }
 
@@ -75,7 +75,7 @@ sub write {
 	my $file = shift or return $self->_error( 'No file name provided' );
 
 	# Write it to the file
-	open( CFG, '>', $file ) 
+	open( CFG, '>'. $file ) 
 		or return $self->_error( "Failed to open file '$file' for writing: $!" );
 	print CFG $self->write_string;
 	close CFG;
@@ -211,9 +211,9 @@ C<$Config::Tiny::errstr> variable, or using the C<errstr()> method.
 
 Bugs should be reported via the CPAN bug tracker at
 
-  http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config%3A%3ATiny
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config%3A%3ATiny>
 
-For other issues, contact the author
+For other issues, or commercial enhancement or support, contact the author.
 
 =head1 TO DO
 
@@ -224,9 +224,7 @@ Implementation is left as an exercise for the reader.
 
 =head1 AUTHOR
 
-        Adam Kennedy ( maintainer )
-        cpan@ali.as
-        http://ali.as/
+Adam Kennedy (Maintainer), L<http://ali.as/>, cpan@ali.as
 
 Thanks to Sherzod Ruzmetov <sherzodr@cpan.org> for Config::Simple,
 which inspired this module by being not quite "simple" enough for me :)
@@ -237,7 +235,7 @@ L<Config::Simple>, L<Config::General>
 
 =head1 COPYRIGHT
 
-Copyright 2002-2004 Adam Kennedy. All rights reserved.
+Copyright 2002 - 2005 Adam Kennedy. All rights reserved.
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
 

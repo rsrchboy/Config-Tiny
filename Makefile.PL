@@ -5,8 +5,8 @@ WriteMakefile(
 	'VERSION_FROM' => 'lib/Config/Tiny.pm',
 	'PREREQ_PM'    => {
 		# Modules for the tests
-		Test::More => 0,
-		FindBin    => 0,
+		'Test::More' => '0.47',
+		'FindBin'    => '0',
 	},
 	($] >= 5.005) ? (
 		'AUTHOR'   => 'Adam Kennedy (cpan@ali.as)',

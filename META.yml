@@ -1,12 +1,12 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         Config-Tiny
-version:      2.00
+version:      2.01
 version_from: lib/Config/Tiny.pm
 installdirs:  site
 requires:
     FindBin:                       0
-    Test::More:                    0
+    Test::More:                    0.47
 
 distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.16
+generated_by: ExtUtils::MakeMaker version 6.17

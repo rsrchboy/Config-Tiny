@@ -1,6 +1,11 @@
 Revision history for Perl extension Config::Tiny
 
-2.0  Fri Jul 16 2004
+2.01 Thu Mar 24 2005
+	- Lars Thegler noted in CSS::Tiny that 3-argument open is not
+	  supported by 5.005. Added a small fix to change it to 2-argument
+	  open.
+
+2.00 Fri Jul 16 2004
 	- Final tweaks to round out complete 5.004 and Win32 compatibility
 
 1.9  Wed Jul  7 2004
