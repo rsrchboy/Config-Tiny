@@ -2,13 +2,13 @@ package Config::Tiny;
 
 # If you thought Config::Simple was small...
 
-require 5.005;
+use 5.005;
 use strict;
 
 use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = 1.6;
-	$errstr = '';
+	$VERSION = '1.7';
+	$errstr  = '';
 }
 
 # Create an empty object
@@ -16,12 +16,12 @@ sub new { bless {}, shift }
 
 # Create an object from a file
 sub read {
-	my $class = shift;
+	my $class = ref $_[0] ? ref shift : shift;
 
 	# Check the file
 	my $file = shift or return $class->_error( 'You did not specify a file name' );
-	return $class->_error( "File '$file' does not exist" ) unless -e $file;
-	return $class->_error( "'$file' is a directory, not a file" ) unless -f $file;
+	return $class->_error( "File '$file' does not exist" )              unless -e $file;
+	return $class->_error( "'$file' is a directory, not a file" )       unless -f $file;
 	return $class->_error( "Insufficient permissions to read '$file'" ) unless -r $file;
 
 	# Slurp in the file
@@ -35,13 +35,14 @@ sub read {
 
 # Create an object from a string
 sub read_string {
-	return undef unless defined $_[1];
-	my $self = bless {}, shift;
+	my $class = ref $_[0] ? ref shift : shift;
+	my $self  = bless {}, $class;
+	return undef unless $_[0];
 
 	# Parse the file
 	my $ns = '_';
 	my $counter = 0;
-	foreach ( split /(?:\015\012|\015|\012)/, shift ) {
+	foreach ( split /(?:\015{1,2}\012|\015|\012)/, shift ) {
 		$counter++;
 
 		# Skip comments and empty lines

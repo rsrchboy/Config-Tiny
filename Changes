@@ -1,5 +1,9 @@
 Revision history for Perl extension Config::Tiny
 
+1.7  Tue Jun 22 2004
+    - Added a little more flexibility in the 'read' and 'read_string' methods
+      to handle being called in unexpected, but recoverable, ways.
+
 1.6  Mon Mar  1 2004
     - Bug fix: Sections without keys didn't appear at all in the parsed struct
 
