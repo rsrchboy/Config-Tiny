@@ -1,6 +1,10 @@
 Revision history for Perl extension Config::Tiny
 
-0.2  Tue Nev 26 21:51:34 2002
+0.3  Mon Dec 09 00:44:21 2002
+    - Upgraded tests to Test::More, to deep test the structs
+    - Added Fcntl to the required modules
+
+0.2  Tue Nov 26 21:51:34 2002
     - Don't import Fcntl symbols
 
 0.1  Wed Nov 13 16:50:23 2002

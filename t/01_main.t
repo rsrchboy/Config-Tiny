@@ -6,7 +6,7 @@ use strict;
 use lib '../../../modules'; # For development testing
 use lib '../lib'; # For installation testing
 use UNIVERSAL 'isa';
-use Test::Simple tests => 19;
+use Test::More tests => 21;
 
 # Set up any needed globals
 use vars qw{$loaded};
@@ -52,7 +52,22 @@ ok( isa( $Config, 'HASH' ), '->read returns a hash reference' );
 ok( isa( $Config, 'Config::Tiny' ), '->read returns a Config::Tiny object' );
 
 # Check the structure of the config
-## FIXME
+my $expected = {
+	'_' => {
+		root => 'something',
+		},
+	section => {
+		one => 'two',
+		Foo => 'Bar',
+		this => 'Your Mother!',
+		blank => '',
+		},
+	'Section Two' => {
+		'something else' => 'blah',
+		},
+	};
+bless $expected, 'Config::Tiny';
+is_deeply( $Config, $expected, 'Config structure matches expected' );
 
 # Add some stuff to the trivial config and check write_string() for it
 $Trivial->{_} = { root1 => 'root2' };
@@ -93,6 +108,6 @@ ok( isa( $Read, 'HASH' ), '->read of what we wrote returns a hash reference' );
 ok( isa( $Read, 'Config::Tiny' ), '->read of what we wrote returns a Config::Tiny object' );
 
 # Check the structure of what we read back in
-### FIXME
+is_deeply( $Read, $Trivial, 'What we read matches what we wrote out' );
 
 1;
