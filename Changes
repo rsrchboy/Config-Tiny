@@ -1,5 +1,8 @@
 Revision history for Perl extension Config::Tiny
 
+1.9  Wed Jul  7 2004
+	- Applied some small optimisations from Japheth Cleaver
+
 1.8  Wed Jun 30 2004
 	- Fixed a bug whereby trying to load an empty file returned an error,
 	  when it should be valid (if an empty object)

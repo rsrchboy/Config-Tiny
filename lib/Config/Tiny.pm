@@ -7,7 +7,7 @@ use strict;
 
 use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = '1.8';
+	$VERSION = '1.9';
 	$errstr  = '';
 }
 
@@ -21,8 +21,8 @@ sub read {
 	# Check the file
 	my $file = shift or return $class->_error( 'You did not specify a file name' );
 	return $class->_error( "File '$file' does not exist" )              unless -e $file;
-	return $class->_error( "'$file' is a directory, not a file" )       unless -f $file;
-	return $class->_error( "Insufficient permissions to read '$file'" ) unless -r $file;
+	return $class->_error( "'$file' is a directory, not a file" )       unless -f _;
+	return $class->_error( "Insufficient permissions to read '$file'" ) unless -r _;
 
 	# Slurp in the file
 	local $/ = undef;
@@ -78,7 +78,7 @@ sub write {
 	my $file = shift or return $self->_error( 'No file name provided' );
 
 	# Write it to the file
-	open( CFG, ">$file" ) 
+	open( CFG, '>', $file ) 
 		or return $self->_error( "Failed to open file '$file' for writing: $!" );
 	print CFG $self->write_string;
 	close( CFG );
