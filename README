@@ -63,43 +63,42 @@ CONFIGURATION FILE SYNTAX
     When writing back to the config file, any comments are discarded.
 
 METHODS
-  new()
-    The constructor "new()" creates and returns an empty Config::Tiny
-    object.
+  new
+    The constructor "new" creates and returns an empty Config::Tiny object.
 
-  read( $filename )
-    The "read()" constructor reads a config file, and returns a new
+  read $filename
+    The "read" constructor reads a config file, and returns a new
     Config::Tiny object containing the properties in the file.
 
     Returns the object on success, or "undef" on error.
 
-  read_string( $string );
+  read_string $string;
     The "read_string()" takes as argument the contents of a config file as a
     string and returns the Config::Tiny object for it.
 
-  write()
-    The "write( $filename )" generates the file for the properties, and
-    writes it to disk.
+  write
+    The "write $filename" generates the file for the properties, and writes
+    it to disk.
 
     Returns true on success or "undef" on error.
 
-  write_string()
+  write_string
     Generates the file for the object and returns it as a string.
 
-  errstr()
+  errstr
     When an error occurs, you can retrieve the error message either from the
     $Config::Tiny::errstr variable, or using the "errstr()" method.
 
 SUPPORT
-    Contact the author
+    Bugs should be reported via the CPAN bug tracker at
+
+      http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config%3A%3ATiny
+
+    For other issues, contact the author
 
 TO DO
     I'm debating adding a get and set method to get or set a section.key
     based value...
-
-    To make this smaller still, it could be implemented in C/XS, although
-    this would destroy portability. I nominate the namespace Config::Tinier
-    for this.
 
     Implementation is left as an exercise for the reader.
 
@@ -115,9 +114,9 @@ SEE ALSO
     Config::Simple, Config::General
 
 COPYRIGHT
-    Copyright (c) 2002-2003 Adam Kennedy. All rights reserved. This program
-    is free software; you can redistribute it and/or modify it under the
-    same terms as Perl itself.
+    Copyright 2002-2004 Adam Kennedy. All rights reserved. This program is
+    free software; you can redistribute it and/or modify it under the same
+    terms as Perl itself.
 
     The full text of the license can be found in the LICENSE file included
     with this module.

@@ -7,7 +7,7 @@ use strict;
 
 use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = 1.4;
+	$VERSION = 1.5;
 	$errstr = '';
 }
 
@@ -173,49 +173,50 @@ When writing back to the config file, any comments are discarded.
 
 =head1 METHODS
 
-=head2 new()
+=head2 new
 
-The constructor C<new()> creates and returns an empty Config::Tiny object.
+The constructor C<new> creates and returns an empty Config::Tiny object.
 
-=head2 read( $filename )
+=head2 read $filename
 
-The C<read()> constructor reads a config file, and returns a new Config::Tiny
+The C<read> constructor reads a config file, and returns a new Config::Tiny
 object containing the properties in the file. 
 
 Returns the object on success, or C<undef> on error.
 
-=head2 read_string( $string );
+=head2 read_string $string;
 
 The C<read_string()> takes as argument the contents of a config file as a string
 and returns the Config::Tiny object for it.
 
-=head2 write()
+=head2 write
 
-The C<write( $filename )> generates the file for the properties, and writes it
+The C<write $filename> generates the file for the properties, and writes it
 to disk. 
 
 Returns true on success or C<undef> on error.
 
-=head2 write_string()
+=head2 write_string
 
 Generates the file for the object and returns it as a string.
 
-=head2 errstr()
+=head2 errstr
 
 When an error occurs, you can retrieve the error message either from the
 C<$Config::Tiny::errstr> variable, or using the C<errstr()> method.
 
 =head1 SUPPORT
 
-Contact the author
+Bugs should be reported via the CPAN bug tracker at
+
+  http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config%3A%3ATiny
+
+For other issues, contact the author
 
 =head1 TO DO
 
 I'm debating adding a get and set method to get or set a section.key based
 value...
-
-To make this smaller still, it could be implemented in C/XS, although this
-would destroy portability. I nominate the namespace Config::Tinier for this.
 
 Implementation is left as an exercise for the reader.
 
@@ -234,7 +235,7 @@ L<Config::Simple>, L<Config::General>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2002-2003 Adam Kennedy. All rights reserved.
+Copyright 2002-2004 Adam Kennedy. All rights reserved.
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
 
