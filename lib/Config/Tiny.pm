@@ -2,25 +2,20 @@ package Config::Tiny;
 
 # If you thought Config::Simple was small...
 
-require 5.005; # Not tested for 5.004
+require 5.005;
 use strict;
-use Fcntl ();
 
-# Set the VERSION
-use vars qw{$VERSION};
+use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = 0.3;
+	$VERSION = 1.0;
+	$errstr = '';
 }
 
-# Create the error string
-use vars qw{$errstr};
-BEGIN { $errstr = '' }
-
-# Create a new, empty, Config object
+# Create an empty object
 sub new { bless { }, $_[0] }
 
+# Create an object from a file
 sub read {
-	$errstr = '';
 	my $class = shift;
 
 	# Check the file
@@ -29,28 +24,28 @@ sub read {
 	return $class->_error( "'$file' is a directory, not a file" ) unless -f $file;
 	return $class->_error( "Insufficient permissions to read '$file'" ) unless -r $file;
 
-	# Create the base object
-	my $self = $class->new();
-	
-	# Open the file
-	sysopen( CFG, $file, Fcntl::O_RDONLY() ) 
-		or return $class->_error( "Failed to open file '$file': $!" );
-	flock( CFG, Fcntl::LOCK_SH() ) 
-		or return $class->_error( "Failed to get a read lock on the file '$file'" );
-	
-	# Get the file's contents
-	my @contents = <CFG>;
-	
-	# Close the file
-	flock( CFG, Fcntl::LOCK_UN() )
-		or return $class->_error( "Failed to unlock the file '$file'" );	
-	close( CFG ) or $class->_error( "Failed to close the file '$file': $!" );
+	# Read in the file
+	local $/ = undef;
+	open( CFG, $file ) or return $class->_error( "Failed to open file '$file': $!" );
+	my $contents = <CFG>;
+	close( CFG );
+
+	# Parse and return
+	return $class->read_string( $contents );
+}	
+
+# Create an object from a string
+sub read_string {
+	my $class = shift;
+	my $string = shift;
+
+	# Create the empty object
+	my $self = bless {}, $class;
 	
 	# Parse the file
 	my $ns = '_';
 	my $counter = 0;
-	chomp( @contents );
-	foreach ( @contents ) {
+	foreach ( split /(?:\015\012|\015|\012)/, $string ) {
 		$counter++;
 		
 		# Skip comments and empty lines
@@ -68,45 +63,35 @@ sub read {
 			next;
 		}
 		
-		return $self->_error( "Syntax error in '$file' at line $counter: $_" );
+		return $self->_error( "Syntax error at line $counter: $_" );
 	}
 	
 	return $self;
 }
 
+# Save an object to a file
 sub write {
-	$errstr = '';
 	my $self = shift;
-	my $file = shift;
-	my $mode = shift || 0666;
-	unless ( $file ) {
-		return $self->_error( 'No file name provided to save to' );
-	}
+	my $file = shift or return $self->_error( 'No file name provided' );
 
 	# Get the contents of the file
 	my $contents = $self->write_string();
 	
-	# Open the file
-	sysopen ( CFG, $file, Fcntl::O_WRONLY()|Fcntl::O_CREAT()|Fcntl::O_TRUNC(), $mode )
+	# Write it to the file
+	open ( CFG, ">$file" )
 		or return $self->_error( "Failed to open file '$file' for writing: $!" );
-	flock( CFG, Fcntl::LOCK_EX() )
-		or return $self->_error( "Failed to get a write lock on the file '$file'" );
-	
 	print CFG $contents;
-	
-	# Close the file
-	flock( CFG, Fcntl::LOCK_UN() )
-		or return $self->_error( "Failed to unlock the file '$file'" );	
-	close( CFG ) or $self->_error( "Failed to close the file '$file': $!" );
+	close( CFG );
 
 	return 1;	
 }
 
+# Save an object to a string
 sub write_string {
 	my $self = shift;
 	
 	my $contents = '';
-	foreach my $section ( sort { (($b eq '_') <=> ($a eq '_')) || ($a cmp $b) } keys %$self ) { # Make sure _ is first
+	foreach my $section ( sort { (($b eq '_') <=> ($a eq '_')) || ($a cmp $b) } keys %$self ) {
 		my $block = $self->{$section};
 		$contents .= "\n" if length $contents;
 		$contents .= "[$section]\n" unless $section eq '_';
@@ -139,18 +124,18 @@ Config::Tiny - Read/Write .ini style files with as little code as possible
     
     [section]
     one=twp
-    three=four
-    Foo=Bar
+    three= four
+    Foo =Bar
     empty=
 
     # In your program
     use Config::Tiny;
 
-	# Create a config
-	my $Config = Config::Tiny->new();
+    # Create a config
+    my $Config = Config::Tiny->new();
 
-	# Open the config
-	$Config = Config::Tiny->read( 'file.conf' );
+    # Open the config
+    $Config = Config::Tiny->read( 'file.conf' );
 
     # Reading properties
     my $rootproperty = $Config->{_}->{rootproperty};
@@ -158,9 +143,9 @@ Config::Tiny - Read/Write .ini style files with as little code as possible
     my $Foo = $Config->{section}->{Foo};
 
     # Changing data
-	$Config->{newsection} = { this => 'that' }; # Add a section
-	$Config->{section}->{Foo} = 'Not Bar!';     # Change a value
-	delete $Config->{_};                        # Delete a value or section
+    $Config->{newsection} = { this => 'that' }; # Add a section
+    $Config->{section}->{Foo} = 'Not Bar!';     # Change a value
+    delete $Config->{_};                        # Delete a value or section
 
     # Save a config
     $Config->write( 'file.conf' );
@@ -203,6 +188,11 @@ The constructor C<new()> creates and returns an empty Config::Tiny object.
 The C<read()> constructor reads a config file, and returns a new Config::Tiny
 object containing the properties in the file. Returns the object on success.
 Returns C<undef> on error.
+
+=head2 read_string( $string );
+
+The C<read_string()> takes as argument the contents of a config file as a string
+and returns the Config::Tiny object for it.
 
 =head2 write()
 

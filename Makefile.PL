@@ -6,7 +6,6 @@ WriteMakefile(
 	'PREREQ_PM'    => {
 		Test::More => 0,
 		FindBin    => 0,
-		Fcntl      => 0,
 		
 	},	
 	($] >= 5.005) ? (

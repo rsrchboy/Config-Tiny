@@ -6,7 +6,7 @@ use strict;
 use lib '../../../modules'; # For development testing
 use lib '../lib'; # For installation testing
 use UNIVERSAL 'isa';
-use Test::More tests => 21;
+use Test::More tests => 23;
 
 # Set up any needed globals
 use vars qw{$loaded};
@@ -91,6 +91,11 @@ this=that
 this little piggy=went to market
 END
 
+# Test read_string
+my $Read = Config::Tiny->read_string( $string );
+ok( $Read, '->read_string returns true' );
+is_deeply( $Read, $Trivial, '->read_string returns expected value' );
+
 my $generated = $Trivial->write_string();
 ok( length $generated, '->write_string returns something' );
 ok( $generated eq $string, '->write_string returns the correct file contents' );
@@ -101,7 +106,7 @@ ok( $rv, '->write returned true' );
 ok( -e 'test2.conf', '->write actually created a file' );
 
 # Try to read the config back in
-my $Read = Config::Tiny->read( './test2.conf' );
+$Read = Config::Tiny->read( './test2.conf' );
 ok( $Read, '->read of what we wrote returns true' );
 ok( ref $Read, '->read of what we wrote returns a reference' );
 ok( isa( $Read, 'HASH' ), '->read of what we wrote returns a hash reference' );
@@ -110,4 +115,12 @@ ok( isa( $Read, 'Config::Tiny' ), '->read of what we wrote returns a Config::Tin
 # Check the structure of what we read back in
 is_deeply( $Read, $Trivial, 'What we read matches what we wrote out' );
 
+
+
+
+
+END {
+	# Clean up
+	unlink './test2.conf';
+}
 1;

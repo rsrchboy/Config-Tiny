@@ -8,18 +8,18 @@ SYNOPSIS
     
         [section]
         one=twp
-        three=four
-        Foo=Bar
+        three= four
+        Foo =Bar
         empty=
 
         # In your program
         use Config::Tiny;
 
-            # Create a config
-            my $Config = Config::Tiny->new();
+        # Create a config
+        my $Config = Config::Tiny->new();
 
-            # Open the config
-            $Config = Config::Tiny->read( 'file.conf' );
+        # Open the config
+        $Config = Config::Tiny->read( 'file.conf' );
 
         # Reading properties
         my $rootproperty = $Config->{_}->{rootproperty};
@@ -27,9 +27,9 @@ SYNOPSIS
         my $Foo = $Config->{section}->{Foo};
 
         # Changing data
-            $Config->{newsection} = { this => 'that' }; # Add a section
-            $Config->{section}->{Foo} = 'Not Bar!';     # Change a value
-            delete $Config->{_};                        # Delete a value or section
+        $Config->{newsection} = { this => 'that' }; # Add a section
+        $Config->{section}->{Foo} = 'Not Bar!';     # Change a value
+        delete $Config->{_};                        # Delete a value or section
 
         # Save a config
         $Config->write( 'file.conf' );
@@ -68,6 +68,10 @@ METHODS
     The "read()" constructor reads a config file, and returns a new
     Config::Tiny object containing the properties in the file. Returns the
     object on success. Returns "undef" on error.
+
+  read_string( $string );
+    The "read_string()" takes as argument the contents of a config file as a
+    string and returns the Config::Tiny object for it.
 
   write()
     The "write( $filename )" generates the file for the properties, and

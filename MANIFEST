@@ -5,5 +5,4 @@ Makefile.PL
 README
 lib/Config/Tiny.pm
 t/01_main.t
-t/test.conf
 test.conf

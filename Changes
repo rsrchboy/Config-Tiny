@@ -1,5 +1,12 @@
 Revision history for Perl extension Config::Tiny
 
+1.0  Sat Dec 21 11:53:51 2002
+    - Removed file locking, since we read/write virtually atomically now
+    - Removed mode support from ->write() it was erroneous
+    - Removed dependency on Fcntl
+    - Added the read_string() method
+    - Other minor tweaks to shrink the code
+
 0.3  Mon Dec 09 00:44:21 2002
     - Upgraded tests to Test::More, to deep test the structs
     - Added Fcntl to the required modules
