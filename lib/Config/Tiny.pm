@@ -4,12 +4,12 @@ package Config::Tiny;
 
 require 5.005; # Not tested for 5.004
 use strict;
-use Fcntl qw{:DEFAULT :flock};
+use Fcntl ();
 
 # Set the VERSION
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '0.1';
+	$VERSION = '0.2';
 }
 
 # Create the error string
@@ -33,16 +33,16 @@ sub read {
 	my $self = $class->new();
 	
 	# Open the file
-	sysopen( CFG, $file, O_RDONLY ) 
+	sysopen( CFG, $file, Fcntl::O_RDONLY() ) 
 		or return $class->_error( "Failed to open file '$file': $!" );
-	flock( CFG, LOCK_SH ) 
+	flock( CFG, Fcntl::LOCK_SH() ) 
 		or return $class->_error( "Failed to get a read lock on the file '$file'" );
 	
 	# Get the file's contents
 	my @contents = <CFG>;
 	
 	# Close the file
-	flock( CFG, LOCK_UN )
+	flock( CFG, Fcntl::LOCK_UN() )
 		or return $class->_error( "Failed to unlock the file '$file'" );	
 	close( CFG ) or $class->_error( "Failed to close the file '$file': $!" );
 	
@@ -87,15 +87,15 @@ sub write {
 	my $contents = $self->write_string();
 	
 	# Open the file
-	sysopen ( CFG, $file, O_WRONLY|O_CREAT|O_TRUNC, $mode )
+	sysopen ( CFG, $file, Fcntl::O_WRONLY()|Fcntl::O_CREAT()|Fcntl::O_TRUNC(), $mode )
 		or return $self->_error( "Failed to open file '$file' for writing: $!" );
-	flock( CFG, LOCK_EX )
+	flock( CFG, Fcntl::LOCK_EX() )
 		or return $self->_error( "Failed to get a write lock on the file '$file'" );
 	
 	print CFG $contents;
 	
 	# Close the file
-	flock( CFG, LOCK_UN )
+	flock( CFG, Fcntl::LOCK_UN() )
 		or return $self->_error( "Failed to unlock the file '$file'" );	
 	close( CFG ) or $self->_error( "Failed to close the file '$file': $!" );
 
@@ -125,7 +125,6 @@ sub _error { $errstr = $_[1]; return undef }
 1;
 
 __END__
-
 
 =pod
 

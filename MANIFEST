@@ -6,5 +6,4 @@ README
 lib/Config/Tiny.pm
 t/01_main.t
 t/test.conf
-t/test2.conf
 test.conf
