@@ -7,7 +7,7 @@ use strict;
 
 use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = '1.7';
+	$VERSION = '1.8';
 	$errstr  = '';
 }
 
@@ -37,7 +37,7 @@ sub read {
 sub read_string {
 	my $class = ref $_[0] ? ref shift : shift;
 	my $self  = bless {}, $class;
-	return undef unless $_[0];
+	return undef unless defined $_[0];
 
 	# Parse the file
 	my $ns = '_';
@@ -234,7 +234,7 @@ Implementation is left as an exercise for the reader.
         http://ali.as/
 
 Thanks to Sherzod Ruzmetov <sherzodr@cpan.org> for Config::Simple,
-which inspired this module.
+which inspired this module by being not quite "simple" enough for me :)
 
 =head1 SEE ALSO
 

@@ -3,16 +3,24 @@
 # Formal testing for Config::Tiny
 
 use strict;
-use lib '../../modules'; # For development testing
-use lib '../lib'; # For installation testing
+use lib ();
 use UNIVERSAL 'isa';
-use Test::More tests => 23;
+use File::Spec::Functions ':ALL';
+BEGIN {
+	$| = 1;
+	unless ( $ENV{HARNESS_ACTIVE} ) {
+		require FindBin;
+		chdir ($FindBin::Bin = $FindBin::Bin); # Avoid a warning
+		lib->import( catdir( updir(), updir(), 'modules') );
+	}
+}
+
+use Test::More tests => 25;
 
 # Set up any needed globals
 use vars qw{$loaded};
 BEGIN {
 	$loaded = 0;
-	$| = 1;
 }
 
 
@@ -116,12 +124,27 @@ ok( isa( $Read, 'Config::Tiny' ), '->read of what we wrote returns a Config::Tin
 # Check the structure of what we read back in
 is_deeply( $Read, $Trivial, 'What we read matches what we wrote out' );
 
-
-
-
-
 END {
 	# Clean up
 	unlink './test2.conf';
 }
+
+
+
+
+
+#####################################################################
+# Bugs that happened we don't want to happen again
+
+# Reading in an empty file, or a defined but zero length string, should yield
+# a valid, but empty, object.
+my $Empty = Config::Tiny->read_string('');
+isa_ok( $Empty, 'Config::Tiny' );
+is( scalar keys %$Empty, 0, 'Config::Tiny object from empty string, is empty' );
+
+
+
+
+
+
 1;

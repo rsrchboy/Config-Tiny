@@ -108,7 +108,7 @@ AUTHOR
             http://ali.as/
 
     Thanks to Sherzod Ruzmetov <sherzodr@cpan.org> for Config::Simple, which
-    inspired this module.
+    inspired this module by being not quite "simple" enough for me :)
 
 SEE ALSO
     Config::Simple, Config::General
