@@ -7,7 +7,7 @@ use strict;
 
 use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = 1.5;
+	$VERSION = 1.6;
 	$errstr = '';
 }
 
@@ -50,6 +50,12 @@ sub read_string {
 		# Handle section headers
 		if ( /^\s*\[(.+?)\]\s*/ ) {
 			$ns = $1;
+
+			# Create the sub-hash if it doesn't exist.
+			# Without this sections without keys will not
+			# appear at all in the completed struct.
+			$self->{$ns} ||= {};
+
 			next;
 		}
 
@@ -71,7 +77,7 @@ sub write {
 	my $file = shift or return $self->_error( 'No file name provided' );
 
 	# Write it to the file
-	open ( CFG, ">$file" ) 
+	open( CFG, ">$file" ) 
 		or return $self->_error( "Failed to open file '$file' for writing: $!" );
 	print CFG $self->write_string;
 	close( CFG );

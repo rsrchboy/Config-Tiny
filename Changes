@@ -1,7 +1,10 @@
 Revision history for Perl extension Config::Tiny
 
+1.6  Mon Mar  1 2004
+    - Bug fix: Sections without keys didn't appear at all in the parsed struct
+
 1.5  Wed Jan  7 2004
-    - Updating documentation to provide a correct location to send bug reports to
+    - Updating documentation to provide a correct location to send bug reports
 
 1.4  Web Dec 24 2003
     - Caught a warning when trying to parse an undefined string.
