@@ -7,7 +7,7 @@ use strict;
 
 use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = 1.3;
+	$VERSION = 1.4;
 	$errstr = '';
 }
 
@@ -35,6 +35,7 @@ sub read {
 
 # Create an object from a string
 sub read_string {
+	return undef unless defined $_[1];
 	my $self = bless {}, shift;
 
 	# Parse the file
