@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Formal testing for Config::Tiny
 
@@ -17,18 +17,13 @@ BEGIN {
 
 use Test::More tests => 25;
 
-# Set up any needed globals
-use vars qw{$loaded};
-BEGIN {
-	$loaded = 0;
-}
 
 
 
 
 # Check their perl version
 BEGIN {
-	ok( $] >= 5.005, "Your perl is new enough" );
+	ok( $] >= 5.004, "Your perl is new enough" );
 }
 	
 
@@ -36,13 +31,7 @@ BEGIN {
 
 
 # Does the module load
-END { ok( 0, 'Config::Tiny loads' ) unless $loaded; }
-use Config::Tiny;
-$loaded = 1;
-ok( 1, 'Config::Tiny loads' );
-
-
-
+use_ok('Config::Tiny');
 
 # Test trivial creation
 my $Trivial = Config::Tiny->new();
@@ -53,7 +42,7 @@ ok( isa( $Trivial, 'Config::Tiny' ), '->new returns a Config::Tiny object' );
 ok( scalar keys %$Trivial == 0, '->new returns an empty object' );
 
 # Try to read in a config
-my $Config = Config::Tiny->read( './test.conf' );
+my $Config = Config::Tiny->read( 'test.conf' );
 ok( $Config, '->read returns true' );
 ok( ref $Config, '->read returns a reference' );
 ok( isa( $Config, 'HASH' ), '->read returns a hash reference' );
@@ -110,12 +99,12 @@ ok( length $generated, '->write_string returns something' );
 ok( $generated eq $string, '->write_string returns the correct file contents' );
 
 # Try to write a file
-my $rv = $Trivial->write( './test2.conf' );
+my $rv = $Trivial->write( 'test2.conf' );
 ok( $rv, '->write returned true' );
 ok( -e 'test2.conf', '->write actually created a file' );
 
 # Try to read the config back in
-$Read = Config::Tiny->read( './test2.conf' );
+$Read = Config::Tiny->read( 'test2.conf' );
 ok( $Read, '->read of what we wrote returns true' );
 ok( ref $Read, '->read of what we wrote returns a reference' );
 ok( isa( $Read, 'HASH' ), '->read of what we wrote returns a hash reference' );
@@ -126,7 +115,7 @@ is_deeply( $Read, $Trivial, 'What we read matches what we wrote out' );
 
 END {
 	# Clean up
-	unlink './test2.conf';
+	unlink 'test2.conf';
 }
 
 
@@ -141,10 +130,3 @@ END {
 my $Empty = Config::Tiny->read_string('');
 isa_ok( $Empty, 'Config::Tiny' );
 is( scalar keys %$Empty, 0, 'Config::Tiny object from empty string, is empty' );
-
-
-
-
-
-
-1;

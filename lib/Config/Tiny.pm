@@ -2,12 +2,12 @@ package Config::Tiny;
 
 # If you thought Config::Simple was small...
 
-use 5.005;
+use 5.004;
 use strict;
 
 use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = '1.9';
+	$VERSION = '2.00';
 	$errstr  = '';
 }
 
@@ -26,9 +26,9 @@ sub read {
 
 	# Slurp in the file
 	local $/ = undef;
-	open( CFG, $file ) or return $class->_error( "Failed to open file '$file': $!" );
+	open CFG, $file or return $class->_error( "Failed to open file '$file': $!" );
 	my $contents = <CFG>;
-	close( CFG );
+	close CFG;
 
 	$class->read_string( $contents );
 }
@@ -40,23 +40,20 @@ sub read_string {
 	return undef unless defined $_[0];
 
 	# Parse the file
-	my $ns = '_';
+	my $ns      = '_';
 	my $counter = 0;
 	foreach ( split /(?:\015{1,2}\012|\015|\012)/, shift ) {
 		$counter++;
 
 		# Skip comments and empty lines
-		next if /^\s*(?:\#|\;)/ || /^\s*$/;
+		next if /^\s*(?:\#|\;|$)/;
 
 		# Handle section headers
-		if ( /^\s*\[(.+?)\]\s*/ ) {
-			$ns = $1;
-
+		if ( /^\s*\[(.+?)\]\s*$/ ) {
 			# Create the sub-hash if it doesn't exist.
 			# Without this sections without keys will not
 			# appear at all in the completed struct.
-			$self->{$ns} ||= {};
-
+			$self->{$ns = $1} ||= {};
 			next;
 		}
 
@@ -81,9 +78,7 @@ sub write {
 	open( CFG, '>', $file ) 
 		or return $self->_error( "Failed to open file '$file' for writing: $!" );
 	print CFG $self->write_string;
-	close( CFG );
-
-	1;
+	close CFG;
 }
 
 # Save an object to a string
@@ -193,7 +188,7 @@ Returns the object on success, or C<undef> on error.
 
 =head2 read_string $string;
 
-The C<read_string()> takes as argument the contents of a config file as a string
+The C<read_string> method takes as argument the contents of a config file as a string
 and returns the Config::Tiny object for it.
 
 =head2 write

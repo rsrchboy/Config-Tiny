@@ -73,8 +73,8 @@ METHODS
     Returns the object on success, or "undef" on error.
 
   read_string $string;
-    The "read_string()" takes as argument the contents of a config file as a
-    string and returns the Config::Tiny object for it.
+    The "read_string" method takes as argument the contents of a config file
+    as a string and returns the Config::Tiny object for it.
 
   write
     The "write $filename" generates the file for the properties, and writes

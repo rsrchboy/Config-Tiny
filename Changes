@@ -1,5 +1,8 @@
 Revision history for Perl extension Config::Tiny
 
+2.0  Fri Jul 16 2004
+	- Final tweaks to round out complete 5.004 and Win32 compatibility
+
 1.9  Wed Jul  7 2004
 	- Applied some small optimisations from Japheth Cleaver
 
