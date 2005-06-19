@@ -35,55 +35,61 @@ SYNOPSIS
         $Config->write( 'file.conf' );
 
 DESCRIPTION
-    Config::Tiny is a perl class to read and write .ini style configuration
-    files with as little code as possible, reducing load time and memory
-    overhead. Memory usage is normally scoffed at in Perl, but in my opinion
-    should be at least kept in mind.
+    "Config::Tiny" is a perl class to read and write .ini style
+    configuration files with as little code as possible, reducing load time
+    and memory overhead. Most of the time it is accepted that Perl
+    applications use a lot of memory and modules. The "::Tiny" family of
+    modules is specifically intended to provide an ultralight alternative to
+    the standard modules.
 
     This module is primarily for reading human written files, and anything
     we write shouldn't need to have documentation/comments. If you need
-    something with more power, move up to Config::Simple, Config::General or
-    one of the many other Config:: modules. To rephrase, Config::Tiny does
+    something with more power move up to Config::Simple, Config::General or
+    one of the many other "Config::" modules. To rephrase, Config::Tiny does
     not preserve your comments, whitespace, or the order of your config
     file.
 
 CONFIGURATION FILE SYNTAX
-    Files are the same as windows .ini files, for example.
+    Files are the same format as for windows .ini files. For example:
 
             [section]
             var1=value1
             var2=value2
 
-    If a property is outside of a section, it will be assigned to the root
-    section, available at "$Config->{_}".
+    If a property is outside of a section at the beginning of a file, it
+    will be assigned to the "root section", available at "$Config->{_}".
 
-    Lines starting with '#' or ';' are comments, and blank lines are
-    ignored.
+    Lines starting with '#' or ';' are considered comments and ignored, as
+    are blank lines.
 
-    When writing back to the config file, any comments are discarded.
+    When writing back to the config file, all comments, custom whitespace,
+    and the ordering of your config file elements is discarded. If you need
+    to keep the human elements of a config when writing back, upgrade to
+    something better, this module is not for you.
 
 METHODS
   new
-    The constructor "new" creates and returns an empty Config::Tiny object.
+    The constructor "new" creates and returns an empty "Config::Tiny"
+    object.
 
   read $filename
     The "read" constructor reads a config file, and returns a new
-    Config::Tiny object containing the properties in the file.
+    "Config::Tiny" object containing the properties in the file.
 
     Returns the object on success, or "undef" on error.
 
   read_string $string;
     The "read_string" method takes as argument the contents of a config file
-    as a string and returns the Config::Tiny object for it.
+    as a string and returns the "Config::Tiny" object for it.
 
-  write
-    The "write $filename" generates the file for the properties, and writes
-    it to disk.
+  write $filename
+    The "write" method generates the file content for the properties, and
+    writes it to disk to the filename specified.
 
     Returns true on success or "undef" on error.
 
   write_string
-    Generates the file for the object and returns it as a string.
+    Generates the file content for the object and returns it as a string.
 
   errstr
     When an error occurs, you can retrieve the error message either from the
@@ -92,19 +98,13 @@ METHODS
 SUPPORT
     Bugs should be reported via the CPAN bug tracker at
 
-    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config%3A%3ATiny>
+    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config-Tiny>
 
     For other issues, or commercial enhancement or support, contact the
     author.
 
-TO DO
-    I'm debating adding a get and set method to get or set a section.key
-    based value...
-
-    Implementation is left as an exercise for the reader.
-
 AUTHOR
-    Adam Kennedy (Maintainer), <http://ali.as/>, cpan@ali.as
+    Adam Kennedy, <http://ali.as/>, cpan@ali*.*as
 
     Thanks to Sherzod Ruzmetov <sherzodr@cpan.org> for Config::Simple, which
     inspired this module by being not quite "simple" enough for me :)

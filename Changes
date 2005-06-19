@@ -1,5 +1,10 @@
 Revision history for Perl extension Config::Tiny
 
+2.02 Sun Jun 19 2005
+	- Add trimming of whitespace from the section names so that we can
+	  use section tags like [ section ] and have it Do What You Mean.
+	- Cleaned up the POD a little more.
+
 2.01 Thu Mar 24 2005
 	- Lars Thegler noted in CSS::Tiny that 3-argument open is not
 	  supported by 5.005. Added a small fix to change it to 2-argument

@@ -7,7 +7,7 @@ use strict;
 
 use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = '2.01';
+	$VERSION = '2.02';
 	$errstr  = '';
 }
 
@@ -49,7 +49,7 @@ sub read_string {
 		next if /^\s*(?:\#|\;|$)/;
 
 		# Handle section headers
-		if ( /^\s*\[(.+?)\]\s*$/ ) {
+		if ( /^\s*\[\s*(.+?)\s*\]\s*$/ ) {
 			# Create the sub-hash if it doesn't exist.
 			# Without this sections without keys will not
 			# appear at all in the completed struct.
@@ -72,11 +72,14 @@ sub read_string {
 # Save an object to a file
 sub write {
 	my $self = shift;
-	my $file = shift or return $self->_error( 'No file name provided' );
+	my $file = shift or return $self->_error(
+		'No file name provided'
+		);
 
 	# Write it to the file
-	open( CFG, '>'. $file ) 
-		or return $self->_error( "Failed to open file '$file' for writing: $!" );
+	open( CFG, '>' . $file ) or return $self->_error(
+		"Failed to open file '$file' for writing: $!"
+		);
 	print CFG $self->write_string;
 	close CFG;
 }
@@ -147,60 +150,65 @@ Config::Tiny - Read/Write .ini style files with as little code as possible
 
 =head1 DESCRIPTION
 
-Config::Tiny is a perl class to read and write .ini style configuration files
-with as little code as possible, reducing load time and memory overhead.
-Memory usage is normally scoffed at in Perl, but in my opinion should be
-at least kept in mind.
+C<Config::Tiny> is a perl class to read and write .ini style configuration
+files with as little code as possible, reducing load time and memory
+overhead. Most of the time it is accepted that Perl applications use a lot
+of memory and modules. The C<::Tiny> family of modules is specifically
+intended to provide an ultralight alternative to the standard modules.
 
 This module is primarily for reading human written files, and anything we
 write shouldn't need to have documentation/comments. If you need something
-with more power, move up to Config::Simple, Config::General or one of the
-many other Config:: modules. To rephrase, Config::Tiny does not preserve
-your comments, whitespace, or the order of your config file.
+with more power move up to L<Config::Simple>, L<Config::General> or one of
+the many other C<Config::> modules. To rephrase, L<Config::Tiny> does B<not>
+preserve your comments, whitespace, or the order of your config file.
 
 =head1 CONFIGURATION FILE SYNTAX
 
-Files are the same as windows .ini files, for example.
+Files are the same format as for windows .ini files. For example:
 
 	[section]
 	var1=value1
 	var2=value2
 
-If a property is outside of a section, it will be assigned to the root
-section, available at C<$Config-E<gt>{_}>.
+If a property is outside of a section at the beginning of a file, it will
+be assigned to the C<"root section">, available at C<$Config-E<gt>{_}>.
 
-Lines starting with '#' or ';' are comments, and blank lines are ignored.
+Lines starting with C<'#'> or C<';'> are considered comments and ignored,
+as are blank lines.
 
-When writing back to the config file, any comments are discarded.
+When writing back to the config file, all comments, custom whitespace,
+and the ordering of your config file elements is discarded. If you need
+to keep the human elements of a config when writing back, upgrade to
+something better, this module is not for you.
 
 =head1 METHODS
 
 =head2 new
 
-The constructor C<new> creates and returns an empty Config::Tiny object.
+The constructor C<new> creates and returns an empty C<Config::Tiny> object.
 
 =head2 read $filename
 
-The C<read> constructor reads a config file, and returns a new Config::Tiny
-object containing the properties in the file. 
+The C<read> constructor reads a config file, and returns a new
+C<Config::Tiny> object containing the properties in the file. 
 
 Returns the object on success, or C<undef> on error.
 
 =head2 read_string $string;
 
-The C<read_string> method takes as argument the contents of a config file as a string
-and returns the Config::Tiny object for it.
+The C<read_string> method takes as argument the contents of a config file
+as a string and returns the C<Config::Tiny> object for it.
 
-=head2 write
+=head2 write $filename
 
-The C<write $filename> generates the file for the properties, and writes it
-to disk. 
+The C<write> method generates the file content for the properties, and
+writes it to disk to the filename specified.
 
 Returns true on success or C<undef> on error.
 
 =head2 write_string
 
-Generates the file for the object and returns it as a string.
+Generates the file content for the object and returns it as a string.
 
 =head2 errstr
 
@@ -211,22 +219,15 @@ C<$Config::Tiny::errstr> variable, or using the C<errstr()> method.
 
 Bugs should be reported via the CPAN bug tracker at
 
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config%3A%3ATiny>
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config-Tiny>
 
 For other issues, or commercial enhancement or support, contact the author.
 
-=head1 TO DO
-
-I'm debating adding a get and set method to get or set a section.key based
-value...
-
-Implementation is left as an exercise for the reader.
-
 =head1 AUTHOR
 
-Adam Kennedy (Maintainer), L<http://ali.as/>, cpan@ali.as
+Adam Kennedy, L<http://ali.as/>, cpan@aliI<.>as
 
-Thanks to Sherzod Ruzmetov <sherzodr@cpan.org> for Config::Simple,
+Thanks to Sherzod Ruzmetov <sherzodr@cpan.org> for L<Config::Simple>,
 which inspired this module by being not quite "simple" enough for me :)
 
 =head1 SEE ALSO

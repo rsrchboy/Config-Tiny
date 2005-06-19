@@ -15,7 +15,7 @@ BEGIN {
 	}
 }
 
-use Test::More tests => 25;
+use Test::More tests => 32;
 
 
 
@@ -24,14 +24,8 @@ use Test::More tests => 25;
 # Check their perl version
 BEGIN {
 	ok( $] >= 5.004, "Your perl is new enough" );
+	use_ok('Config::Tiny');
 }
-	
-
-
-
-
-# Does the module load
-use_ok('Config::Tiny');
 
 # Test trivial creation
 my $Trivial = Config::Tiny->new();
@@ -125,8 +119,39 @@ END {
 #####################################################################
 # Bugs that happened we don't want to happen again
 
+{
 # Reading in an empty file, or a defined but zero length string, should yield
 # a valid, but empty, object.
 my $Empty = Config::Tiny->read_string('');
 isa_ok( $Empty, 'Config::Tiny' );
-is( scalar keys %$Empty, 0, 'Config::Tiny object from empty string, is empty' );
+is( scalar(keys %$Empty), 0, 'Config::Tiny object from empty string, is empty' );
+}
+
+
+
+{
+# A Section header like [ section ] doesn't end up at ->{' section '}.
+# Trim off whitespace from the section header.
+my $string = <<'END';
+# The need to trim off whitespace makes a lot more sense
+# when you are trying to maximise readability.
+[ /path/to/file.txt ]
+this=that
+
+[ section2]
+this=that
+
+[section3 ]
+this=that
+
+END
+
+my $Trim = Config::Tiny->read_string($string);
+isa_ok( $Trim, 'Config::Tiny' );
+ok( exists $Trim->{'/path/to/file.txt'}, 'First section created' );
+is( $Trim->{'/path/to/file.txt'}->{this}, 'that', 'First section created properly' );
+ok( exists $Trim->{section2}, 'Second section created' );
+is( $Trim->{section2}->{this}, 'that', 'Second section created properly' );
+ok( exists $Trim->{section3}, 'Third section created' );
+is( $Trim->{section3}->{this}, 'that', 'Third section created properly' );
+}
