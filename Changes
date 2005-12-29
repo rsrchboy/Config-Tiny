@@ -1,5 +1,11 @@
 Revision history for Perl extension Config::Tiny
 
+2.03 Fri 30 Dec 2005
+	- No functional changes.
+	- POD Change: CPAN #15143 Clear things up about $! after
+	  unsuccessful read()?  (flatworm)
+	- Upgraded Makefile.PL to use Module::Install
+
 2.02 Sun Jun 19 2005
 	- Add trimming of whitespace from the section names so that we can
 	  use section tags like [ section ] and have it Do What You Mean.

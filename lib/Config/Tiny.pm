@@ -7,7 +7,7 @@ use strict;
 
 use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = '2.02';
+	$VERSION = '2.03';
 	$errstr  = '';
 }
 
@@ -194,6 +194,12 @@ C<Config::Tiny> object containing the properties in the file.
 
 Returns the object on success, or C<undef> on error.
 
+When C<read> fails, C<Config::Tiny> sets an error message internally
+you can recover via C<<Config::Tiny->errstr>>. Although in B<some>
+cases a failed C<read> will also set the operating system error
+variable C<$!>, not all errors do and you should not rely on using
+the C<$!> variable.
+
 =head2 read_string $string;
 
 The C<read_string> method takes as argument the contents of a config file
@@ -237,6 +243,7 @@ L<Config::Simple>, L<Config::General>
 =head1 COPYRIGHT
 
 Copyright 2002 - 2005 Adam Kennedy. All rights reserved.
+
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
 
