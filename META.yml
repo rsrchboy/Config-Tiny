@@ -13,4 +13,4 @@ no_index:
 requires:
   FindBin: 0
   perl: 5.004
-version: 2.03
+version: 2.04

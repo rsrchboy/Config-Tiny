@@ -1,24 +1,27 @@
 #line 1 "inc/Module/Install/Metadata.pm - /usr/local/share/perl/5.8.4/Module/Install/Metadata.pm"
 package Module::Install::Metadata;
-use Module::Install::Base;
-@ISA = qw(Module::Install::Base);
-
-$VERSION = '0.05';
 
 use strict 'vars';
-use vars qw($VERSION);
+use Module::Install::Base;
 
-my @scalar_keys = qw<
-    name module_name version abstract author license
+use vars qw($VERSION @ISA);
+BEGIN {
+	$VERSION = '0.06';
+	@ISA     = 'Module::Install::Base';
+}
+
+my @scalar_keys = qw{
+    name module_name abstract author version license
     distribution_type perl_version tests
->;
-my @tuple_keys = qw<
-    build_requires requires recommends bundles
->;
+};
 
-sub Meta { shift }
+my @tuple_keys = qw{
+    build_requires requires recommends bundles
+};
+
+sub Meta            { shift        }
 sub Meta_ScalarKeys { @scalar_keys }
-sub Meta_TupleKeys { @tuple_keys }
+sub Meta_TupleKeys  { @tuple_keys  }
 
 foreach my $key (@scalar_keys) {
     *$key = sub {
@@ -27,13 +30,6 @@ foreach my $key (@scalar_keys) {
         $self->{values}{$key} = shift;
         return $self;
     };
-}
-
-sub sign {
-    my $self = shift;
-    return $self->{values}{sign} if defined wantarray and !@_;
-    $self->{values}{sign} = ( @_ ? $_[0] : 1 );
-    return $self;
 }
 
 foreach my $key (@tuple_keys) {
@@ -57,6 +53,13 @@ foreach my $key (@tuple_keys) {
         push @{ $self->{values}{$key} }, @rv;
         @rv;
     };
+}
+
+sub sign {
+    my $self = shift;
+    return $self->{'values'}{'sign'} if defined wantarray and !@_;
+    $self->{'values'}{'sign'} = ( @_ ? $_[0] : 1 );
+    return $self;
 }
 
 sub all_from {
@@ -192,8 +195,11 @@ sub abstract_from {
     my ( $self, $file ) = @_;
     require ExtUtils::MM_Unix;
     $self->abstract(
-        bless( { DISTNAME => $self->name }, 'ExtUtils::MM_Unix' )
-          ->parse_abstract($file) );
+        bless(
+            { DISTNAME => $self->name },
+            'ExtUtils::MM_Unix'
+        )->parse_abstract($file)
+     );
 }
 
 sub _slurp {

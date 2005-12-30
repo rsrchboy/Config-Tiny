@@ -553,7 +553,8 @@ sub _can_write {
     if (
         eval '$>' and lc(`sudo -V`) =~ /version/ and _prompt(
             qq(
-==> Should we try to re-execute the autoinstall process with 'sudo'?), 'y'
+==> Should we try to re-execute the autoinstall process with 'sudo'?),
+            ((-t STDIN) ? 'y' : 'n')
         ) =~ /^[Yy]/
       )
     {
@@ -714,4 +715,4 @@ installdeps ::
 
 __END__
 
-#line 950
+#line 951

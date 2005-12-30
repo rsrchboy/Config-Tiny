@@ -1,5 +1,9 @@
 Revision history for Perl extension Config::Tiny
 
+2.04 Sat 31 Dec 2005
+	- No functional changes.
+	- Upgrading to a newer Module::Install to address Cygwin problem
+
 2.03 Fri 30 Dec 2005
 	- No functional changes.
 	- POD Change: CPAN #15143 Clear things up about $! after
