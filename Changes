@@ -1,5 +1,11 @@
 Revision history for Perl extension Config::Tiny
 
+2.05 Thu 23 Feb 2006
+	- No functional changes.
+	- Moved over from the old CVS repository to the new SVN one
+	- Updated tests for the new release system
+	- Upgrading to a newer Module::Install
+
 2.04 Sat 31 Dec 2005
 	- No functional changes.
 	- Upgrading to a newer Module::Install to address Cygwin problem

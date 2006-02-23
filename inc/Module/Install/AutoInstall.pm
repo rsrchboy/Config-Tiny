@@ -1,6 +1,8 @@
 #line 1 "inc/Module/Install/AutoInstall.pm - /usr/local/share/perl/5.8.4/Module/Install/AutoInstall.pm"
 package Module::Install::AutoInstall;
-use Module::Install::Base; @ISA = qw(Module::Install::Base);
+
+use Module::Install::Base;
+@ISA = qw{Module::Install::Base};
 
 sub AutoInstall { $_[0] }
 

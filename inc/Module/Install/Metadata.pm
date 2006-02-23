@@ -1,14 +1,12 @@
 #line 1 "inc/Module/Install/Metadata.pm - /usr/local/share/perl/5.8.4/Module/Install/Metadata.pm"
 package Module::Install::Metadata;
 
-use strict 'vars';
 use Module::Install::Base;
+@ISA = qw{Module::Install::Base};
 
-use vars qw($VERSION @ISA);
-BEGIN {
-	$VERSION = '0.06';
-	@ISA     = 'Module::Install::Base';
-}
+$VERSION = '0.06';
+
+use strict 'vars';
 
 my @scalar_keys = qw{
     name module_name abstract author version license
@@ -64,6 +62,14 @@ sub sign {
 
 sub all_from {
     my ( $self, $file ) = @_;
+
+    unless ( defined($file) ) {
+        my $name = $self->name
+            or die "all_from called with no args without setting name() first";
+        $file = join('/', 'lib', split(/-/, $name)) . '.pm';
+        $file =~ s{.*/}{} unless -e $file;
+        die "all_from: cannot find $file from $name" unless -e $file;
+    }
 
     $self->version_from($file)      unless $self->version;
     $self->perl_version_from($file) unless $self->perl_version;

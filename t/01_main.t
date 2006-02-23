@@ -4,20 +4,27 @@
 
 use strict;
 use lib ();
-use UNIVERSAL 'isa';
 use File::Spec::Functions ':ALL';
 BEGIN {
 	$| = 1;
 	unless ( $ENV{HARNESS_ACTIVE} ) {
 		require FindBin;
-		chdir ($FindBin::Bin = $FindBin::Bin); # Avoid a warning
-		lib->import( catdir( updir(), updir(), 'modules') );
+		$FindBin::Bin = $FindBin::Bin; # Avoid a warning
+		chdir catdir( $FindBin::Bin, updir() );
+		lib->import(
+			catdir( 'blib', 'lib' ),
+			catdir( 'blib', 'arch' ),
+			'lib'
+			);
 	}
 }
 
-use Test::More tests => 32;
+use Test::More tests => 33;
 
-
+use vars qw{$VERSION};
+BEGIN {
+	$VERSION = '2.05';
+}
 
 
 
@@ -26,21 +33,22 @@ BEGIN {
 	ok( $] >= 5.004, "Your perl is new enough" );
 	use_ok('Config::Tiny');
 }
+is( $Config::Tiny::VERSION, $VERSION, 'Loaded correct version of Config::Tiny' );
 
 # Test trivial creation
 my $Trivial = Config::Tiny->new();
 ok( $Trivial, '->new returns true' );
 ok( ref $Trivial, '->new returns a reference' );
-ok( isa( $Trivial, 'HASH' ), '->new returns a hash reference' );
-ok( isa( $Trivial, 'Config::Tiny' ), '->new returns a Config::Tiny object' );
+ok( UNIVERSAL::isa( $Trivial, 'HASH' ), '->new returns a hash reference' );
+isa_ok( $Trivial, 'Config::Tiny' );
 ok( scalar keys %$Trivial == 0, '->new returns an empty object' );
 
 # Try to read in a config
-my $Config = Config::Tiny->read( 'test.conf' );
+my $Config = Config::Tiny->read( catfile('t', 'test.conf') );
 ok( $Config, '->read returns true' );
 ok( ref $Config, '->read returns a reference' );
-ok( isa( $Config, 'HASH' ), '->read returns a hash reference' );
-ok( isa( $Config, 'Config::Tiny' ), '->read returns a Config::Tiny object' );
+ok( UNIVERSAL::isa( $Config, 'HASH' ), '->read returns a hash reference' );
+isa_ok( $Config, 'Config::Tiny' );
 
 # Check the structure of the config
 my $expected = {
@@ -101,8 +109,8 @@ ok( -e 'test2.conf', '->write actually created a file' );
 $Read = Config::Tiny->read( 'test2.conf' );
 ok( $Read, '->read of what we wrote returns true' );
 ok( ref $Read, '->read of what we wrote returns a reference' );
-ok( isa( $Read, 'HASH' ), '->read of what we wrote returns a hash reference' );
-ok( isa( $Read, 'Config::Tiny' ), '->read of what we wrote returns a Config::Tiny object' );
+ok( UNIVERSAL::isa( $Read, 'HASH' ), '->read of what we wrote returns a hash reference' );
+isa_ok( $Read, 'Config::Tiny' );
 
 # Check the structure of what we read back in
 is_deeply( $Read, $Trivial, 'What we read matches what we wrote out' );
