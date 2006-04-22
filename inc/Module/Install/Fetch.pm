@@ -1,10 +1,15 @@
-#line 1 "inc/Module/Install/Fetch.pm - /usr/local/share/perl/5.8.4/Module/Install/Fetch.pm"
+#line 1
 package Module::Install::Fetch;
 
+use strict;
 use Module::Install::Base;
-@ISA = qw(Module::Install::Base);
 
-$VERSION = '0.01';
+use vars qw{$VERSION $ISCORE @ISA};
+BEGIN {
+	$VERSION = '0.62';
+	$ISCORE  = 1;
+	@ISA     = qw{Module::Install::Base};
+}
 
 sub get_file {
     my ($self, %args) = @_;
@@ -55,14 +60,14 @@ sub get_file {
             chdir $dir; return;
         }
 
-        my @dialog = split(/\n/, << ".");
+        my @dialog = split(/\n/, <<"END_FTP");
 open $host
 user anonymous anonymous\@example.com
 cd $path
 binary
 get $file $file
 quit
-.
+END_FTP
         foreach (@dialog) { $fh->print("$_\n") }
         $fh->close;
     } }

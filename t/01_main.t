@@ -3,27 +3,12 @@
 # Formal testing for Config::Tiny
 
 use strict;
-use lib ();
-use File::Spec::Functions ':ALL';
-BEGIN {
-	$| = 1;
-	unless ( $ENV{HARNESS_ACTIVE} ) {
-		require FindBin;
-		$FindBin::Bin = $FindBin::Bin; # Avoid a warning
-		chdir catdir( $FindBin::Bin, updir() );
-		lib->import(
-			catdir( 'blib', 'lib' ),
-			catdir( 'blib', 'arch' ),
-			'lib'
-			);
-	}
-}
-
+use UNIVERSAL;
 use Test::More tests => 33;
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '2.05';
+	$VERSION = '2.06';
 }
 
 
@@ -39,14 +24,16 @@ is( $Config::Tiny::VERSION, $VERSION, 'Loaded correct version of Config::Tiny' )
 my $Trivial = Config::Tiny->new();
 ok( $Trivial, '->new returns true' );
 ok( ref $Trivial, '->new returns a reference' );
+# Legitimate use of UNIVERSAL::isa
 ok( UNIVERSAL::isa( $Trivial, 'HASH' ), '->new returns a hash reference' );
 isa_ok( $Trivial, 'Config::Tiny' );
 ok( scalar keys %$Trivial == 0, '->new returns an empty object' );
 
 # Try to read in a config
-my $Config = Config::Tiny->read( catfile('t', 'test.conf') );
+my $Config = Config::Tiny->read( 'test.conf' );
 ok( $Config, '->read returns true' );
 ok( ref $Config, '->read returns a reference' );
+# Legitimate use of UNIVERSAL::isa
 ok( UNIVERSAL::isa( $Config, 'HASH' ), '->read returns a hash reference' );
 isa_ok( $Config, 'Config::Tiny' );
 
@@ -109,6 +96,7 @@ ok( -e 'test2.conf', '->write actually created a file' );
 $Read = Config::Tiny->read( 'test2.conf' );
 ok( $Read, '->read of what we wrote returns true' );
 ok( ref $Read, '->read of what we wrote returns a reference' );
+# Legitimate use of UNIVERSAL::isa
 ok( UNIVERSAL::isa( $Read, 'HASH' ), '->read of what we wrote returns a hash reference' );
 isa_ok( $Read, 'Config::Tiny' );
 

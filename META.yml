@@ -3,9 +3,9 @@ no_index:
   directory: 
     - inc
     - t
-generated_by: Module::Install version 0.56
+generated_by: Module::Install version 0.62
 distribution_type: module
-version: 2.05
+version: 2.06
 name: Config-Tiny
 author: Adam Kennedy, L<http://ali.as/>, cpan@aliI<.>as
 license: perl
@@ -13,5 +13,4 @@ build_requires:
   Test::More: 0.47
 requires: 
   perl: 5.004
-  FindBin: 0
 abstract: Read/Write .ini style files with as little code as possible
