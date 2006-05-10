@@ -22,6 +22,7 @@ sub mybegin {
 	}
 
 	# Continue as normal
+	push @$para, @words;
 	return &$begin(@_);
 }
 

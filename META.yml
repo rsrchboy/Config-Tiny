@@ -5,7 +5,7 @@ no_index:
     - t
 generated_by: Module::Install version 0.62
 distribution_type: module
-version: 2.06
+version: 2.07
 name: Config-Tiny
 author: Adam Kennedy, L<http://ali.as/>, cpan@aliI<.>as
 license: perl
