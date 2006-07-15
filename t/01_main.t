@@ -8,7 +8,7 @@ use Test::More tests => 33;
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '2.07';
+	$VERSION = '2.08';
 }
 
 
