@@ -7,7 +7,7 @@ use strict;
 
 use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = '2.08';
+	$VERSION = '2.10';
 	$errstr  = '';
 }
 
@@ -231,18 +231,21 @@ For other issues, or commercial enhancement or support, contact the author.
 
 =head1 AUTHOR
 
-Adam Kennedy, L<http://ali.as/>, cpan@aliI<.>as
+Adam Kennedy E<lt>adamk@cpan.orgE<gt>
 
-Thanks to Sherzod Ruzmetov <sherzodr@cpan.org> for L<Config::Simple>,
-which inspired this module by being not quite "simple" enough for me :)
+=head1 ACKNOWLEGEMENTS
+
+Thanks to Sherzod Ruzmetov E<lt>sherzodr@cpan.orgE<gt> for
+L<Config::Simple>, which inspired this module by being not quite
+"simple" enough for me :)
 
 =head1 SEE ALSO
 
-L<Config::Simple>, L<Config::General>
+L<Config::Simple>, L<Config::General>, L<ali.as>
 
 =head1 COPYRIGHT
 
-Copyright 2002 - 2005 Adam Kennedy. All rights reserved.
+Copyright 2002 - 2006 Adam Kennedy.
 
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
