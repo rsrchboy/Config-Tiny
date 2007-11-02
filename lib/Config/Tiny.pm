@@ -2,13 +2,11 @@ package Config::Tiny;
 
 # If you thought Config::Simple was small...
 
-use 5.004;
 use strict;
-
-use vars qw{$VERSION $errstr};
 BEGIN {
-	$VERSION = '2.10';
-	$errstr  = '';
+	require 5.004;
+	$Config::Tiny::VERSION = '2.12';
+	$Config::Tiny::errstr  = '';
 }
 
 # Create an empty object
@@ -47,6 +45,9 @@ sub read_string {
 
 		# Skip comments and empty lines
 		next if /^\s*(?:\#|\;|$)/;
+
+		# Remove inline comments
+		s/\s\;\s.+$//g;
 
 		# Handle section headers
 		if ( /^\s*\[\s*(.+?)\s*\]\s*$/ ) {
@@ -102,8 +103,8 @@ sub write_string {
 }
 
 # Error handling
-sub errstr { $errstr }
-sub _error { $errstr = $_[1]; undef }
+sub errstr { $Config::Tiny::errstr }
+sub _error { $Config::Tiny::errstr = $_[1]; undef }
 
 1;
 
@@ -221,6 +222,16 @@ Generates the file content for the object and returns it as a string.
 When an error occurs, you can retrieve the error message either from the
 C<$Config::Tiny::errstr> variable, or using the C<errstr()> method.
 
+=head2 property_string
+
+This method is called to produce the string used to represent the property in a
+section.  It is passed the section name and property name.
+
+=head2 set
+
+This is a convenience is called to set a value found in the parsed config string.  It is
+passed the section name, property name, and value.
+
 =head1 SUPPORT
 
 Bugs should be reported via the CPAN bug tracker at
@@ -245,7 +256,7 @@ L<Config::Simple>, L<Config::General>, L<ali.as>
 
 =head1 COPYRIGHT
 
-Copyright 2002 - 2006 Adam Kennedy.
+Copyright 2002 - 2007 Adam Kennedy.
 
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.

@@ -1,16 +1,14 @@
-abstract: Read/Write .ini style files with as little code as possible
-author: Adam Kennedy <adamk@cpan.org>
-build_requires: 
-  ExtUtils::MakeMaker: 6.11
-  Test::More: 0.47
-distribution_type: module
-generated_by: Module::Install version 0.64
-license: perl
-name: Config-Tiny
-no_index: 
-  directory: 
-    - inc
-    - t
-requires: 
-  perl: 5.004
-version: 2.10
+--- #YAML:1.0
+name:                Config-Tiny
+version:             2.12
+abstract:            Read/Write .ini style files with as little code as possible
+license:             perl
+generated_by:        ExtUtils::MakeMaker version 6.32
+distribution_type:   module
+requires:     
+    Test::More:                    0.47
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.2.html
+    version: 1.2
+author:
+    - Adam Kennedy <adamk@cpan.org>

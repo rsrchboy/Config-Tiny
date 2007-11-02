@@ -1,5 +1,10 @@
 Revision history for Perl extension Config::Tiny
 
+2.12 Thu  1 Nov 2007
+	- Converting build script from Module::Install to tinier EU:MM
+
+2.11 Missing
+
 2.10 Sat 20 Sep 2006
 	- This release contains only build-time changes
 	- Did a little housekeeping on Makefile.PL and the unit tests
