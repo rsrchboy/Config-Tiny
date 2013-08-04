@@ -16,7 +16,7 @@ SYNOPSIS
         use Config::Tiny;
 
         # Create a config
-        my $Config = Config::Tiny->new();
+        my $Config = Config::Tiny->new;
 
         # Open the config
         $Config = Config::Tiny->read( 'file.conf' );
@@ -79,9 +79,9 @@ METHODS
     Returns the object on success, or "undef" on error.
 
     When "read" fails, "Config::Tiny" sets an error message internally you
-    can recover via "<Config::Tiny-"errstr>>. Although in some cases a
-    failed "read" will also set the operating system error variable $!, not
-    all errors do and you should not rely on using the $! variable.
+    can recover via "Config::Tiny->errstr". Although in some cases a failed
+    "read" will also set the operating system error variable $!, not all
+    errors do and you should not rely on using the $! variable.
 
   read_string $string;
     The "read_string" method takes as argument the contents of a config file
@@ -100,13 +100,14 @@ METHODS
     When an error occurs, you can retrieve the error message either from the
     $Config::Tiny::errstr variable, or using the "errstr()" method.
 
-  property_string
-    This method is called to produce the string used to represent the
-    property in a section. It is passed the section name and property name.
+CAVEATS
+  Unsupported Section Headers
+    Some edge cases in section headers are not support, and additionally may
+    not be detected when writing the config file.
 
-  set
-    This is a convenience is called to set a value found in the parsed
-    config string. It is passed the section name, property name, and value.
+    Specifically, section headers with leading whitespace, trailing
+    whitespace, or newlines anywhere in the section header, will not be
+    written correctly to the file and may cause file corruption.
 
 SUPPORT
     Bugs should be reported via the CPAN bug tracker at
@@ -127,7 +128,7 @@ SEE ALSO
     Config::Simple, Config::General, ali.as
 
 COPYRIGHT
-    Copyright 2002 - 2007 Adam Kennedy.
+    Copyright 2002 - 2011 Adam Kennedy.
 
     This program is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.

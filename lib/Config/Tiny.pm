@@ -5,7 +5,7 @@ package Config::Tiny;
 use strict;
 BEGIN {
 	require 5.004;
-	$Config::Tiny::VERSION = '2.12';
+	$Config::Tiny::VERSION = '2.15';
 	$Config::Tiny::errstr  = '';
 }
 
@@ -23,10 +23,13 @@ sub read {
 	return $class->_error( "Insufficient permissions to read '$file'" ) unless -r _;
 
 	# Slurp in the file
+	my($encoding) = shift;
+	$encoding     = $encoding ? "<:encoding($encoding)" : '<';
+
 	local $/ = undef;
-	open CFG, $file or return $class->_error( "Failed to open file '$file': $!" );
+	open( CFG, $encoding, $file ) or return $class->_error( "Failed to open file '$file': $!" );
 	my $contents = <CFG>;
-	close CFG;
+	close( CFG );
 
 	$class->read_string( $contents );
 }
@@ -76,12 +79,16 @@ sub write {
 	my $file = shift or return $self->_error(
 		'No file name provided'
 		);
+	my($encoding) = shift;
+	$encoding     = $encoding ? ">:encoding($encoding)" : '>';
 
 	# Write it to the file
-	open( CFG, '>' . $file ) or return $self->_error(
+	my $string = $self->write_string;
+	return undef unless defined $string;
+	open( CFG, $encoding, $file ) or return $self->_error(
 		"Failed to open file '$file' for writing: $!"
 		);
-	print CFG $self->write_string;
+	print CFG $string;
 	close CFG;
 }
 
@@ -91,14 +98,24 @@ sub write_string {
 
 	my $contents = '';
 	foreach my $section ( sort { (($b eq '_') <=> ($a eq '_')) || ($a cmp $b) } keys %$self ) {
+		# Check for several known-bad situations with the section
+		# 1. Leading whitespace
+		# 2. Trailing whitespace
+		# 3. Newlines in section name
+		return $self->_error(
+			"Illegal whitespace in section name '$section'"
+		) if $section =~ /(?:^\s|\n|\s$)/s;
 		my $block = $self->{$section};
 		$contents .= "\n" if length $contents;
 		$contents .= "[$section]\n" unless $section eq '_';
 		foreach my $property ( sort keys %$block ) {
+			return $self->_error(
+				"Illegal newlines in property '$section.$property'"
+			) if $block->{$property} =~ /(?:\012|\015)/s;
 			$contents .= "$property=$block->{$property}\n";
 		}
 	}
-	
+
 	$contents;
 }
 
@@ -118,40 +135,42 @@ Config::Tiny - Read/Write .ini style files with as little code as possible
 
 =head1 SYNOPSIS
 
-    # In your configuration file
-    rootproperty=blah
+	# In your configuration file
+	rootproperty=blah
 
-    [section]
-    one=twp
-    three= four
-    Foo =Bar
-    empty=
+	[section]
+	one=twp
+	three= four
+	Foo =Bar
+	empty=
 
-    # In your program
-    use Config::Tiny;
+	# In your program
+	use Config::Tiny;
 
-    # Create a config
-    my $Config = Config::Tiny->new();
+	# Create a config
+	my $Config = Config::Tiny->new;
 
-    # Open the config
-    $Config = Config::Tiny->read( 'file.conf' );
+	# Open the config
+	$Config = Config::Tiny->read( 'file.conf' );
+	$Config = Config::Tiny->read( 'file.conf', 'utf8' );
 
-    # Reading properties
-    my $rootproperty = $Config->{_}->{rootproperty};
-    my $one = $Config->{section}->{one};
-    my $Foo = $Config->{section}->{Foo};
+	# Reading properties
+	my $rootproperty = $Config->{_}->{rootproperty};
+	my $one = $Config->{section}->{one};
+	my $Foo = $Config->{section}->{Foo};
 
-    # Changing data
-    $Config->{newsection} = { this => 'that' }; # Add a section
-    $Config->{section}->{Foo} = 'Not Bar!';     # Change a value
-    delete $Config->{_};                        # Delete a value or section
+	# Changing data
+	$Config->{newsection} = { this => 'that' }; # Add a section
+	$Config->{section}->{Foo} = 'Not Bar!';     # Change a value
+	delete $Config->{_};                        # Delete a value or section
 
-    # Save a config
-    $Config->write( 'file.conf' );
+	# Save a config
+	$Config->write( 'file.conf' );
+	$Config->write( 'file.conf', 'utf8' );
 
 =head1 DESCRIPTION
 
-C<Config::Tiny> is a perl class to read and write .ini style configuration
+C<Config::Tiny> is a Perl class to read and write .ini style configuration
 files with as little code as possible, reducing load time and memory
 overhead. Most of the time it is accepted that Perl applications use a lot
 of memory and modules. The C<::Tiny> family of modules is specifically
@@ -188,15 +207,19 @@ something better, this module is not for you.
 
 The constructor C<new> creates and returns an empty C<Config::Tiny> object.
 
-=head2 read $filename
+=head2 read($filename, [$encoding])
 
-The C<read> constructor reads a config file, and returns a new
-C<Config::Tiny> object containing the properties in the file. 
+Here, the [] indicate an optional parameter.
+
+The C<read> constructor reads a config file, $filename, and returns a new
+C<Config::Tiny> object containing the properties in the file.
+
+$encoding may be used to indicate the encoding of the file, e.g. 'utf8'.
 
 Returns the object on success, or C<undef> on error.
 
 When C<read> fails, C<Config::Tiny> sets an error message internally
-you can recover via C<<Config::Tiny->errstr>>. Although in B<some>
+you can recover via C<Config::Tiny-E<gt>errstr>. Although in B<some>
 cases a failed C<read> will also set the operating system error
 variable C<$!>, not all errors do and you should not rely on using
 the C<$!> variable.
@@ -206,10 +229,14 @@ the C<$!> variable.
 The C<read_string> method takes as argument the contents of a config file
 as a string and returns the C<Config::Tiny> object for it.
 
-=head2 write $filename
+=head2 write($filename, [$encoding])
+
+Here, the [] indicate an optional parameter.
 
 The C<write> method generates the file content for the properties, and
 writes it to disk to the filename specified.
+
+$encoding may be used to indicate the encoding of the file, e.g. 'utf8'.
 
 Returns true on success or C<undef> on error.
 
@@ -222,15 +249,45 @@ Generates the file content for the object and returns it as a string.
 When an error occurs, you can retrieve the error message either from the
 C<$Config::Tiny::errstr> variable, or using the C<errstr()> method.
 
-=head2 property_string
+=head1 FAQ
 
-This method is called to produce the string used to represent the property in a
-section.  It is passed the section name and property name.
+=head2 Why can't I omit the '=' signs?
 
-=head2 set
+E.g.:
 
-This is a convenience is called to set a value found in the parsed config string.  It is
-passed the section name, property name, and value.
+	[Things]
+	my =
+	list =
+	of =
+	things =
+
+Instead of
+
+	[Things]
+	my
+	list
+	of
+	things
+
+Because the use of '=' signs is a type of mandatory documentation. It indicates that that config contains 4 items,
+and not 1 item split over 4 lines.
+
+=head1 CAVEATS
+
+=head2 Unsupported Section Headers
+
+Some edge cases in section headers are not supported, and additionally may not
+be detected when writing the config file.
+
+Specifically, section headers with leading whitespace, trailing whitespace,
+or newlines anywhere in the section header, will not be written correctly
+to the file and may cause file corruption.
+
+=head2 Setting an option more than once
+
+C<Config::Tiny> will only recognize the first time an option is set in a
+config file. Any further attempts to set the same option later in the config
+file are ignored.
 
 =head1 SUPPORT
 
@@ -256,7 +313,7 @@ L<Config::Simple>, L<Config::General>, L<ali.as>
 
 =head1 COPYRIGHT
 
-Copyright 2002 - 2007 Adam Kennedy.
+Copyright 2002 - 2011 Adam Kennedy.
 
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.

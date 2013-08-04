@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 # Compile testing for Config::Tiny
 
@@ -8,9 +8,6 @@ BEGIN {
 	$^W = 1;
 }
 
-use Test::More tests => 2;
+use Test::More tests => 1;
 
-ok( $] >= 5.004, "Your perl is new enough" );
 use_ok('Config::Tiny');
-
-exit(0);

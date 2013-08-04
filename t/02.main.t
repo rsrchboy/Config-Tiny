@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 # Main testing script for Config::Tiny
 
@@ -8,25 +8,22 @@ BEGIN {
 	$^W = 1;
 }
 
-use UNIVERSAL;
 use Test::More tests => 33;
+use Config::Tiny ();
+use UNIVERSAL    ();
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '2.12';
+	$VERSION = '2.15';
 }
 
 
 
 # Check their perl version
-BEGIN {
-	ok( $] >= 5.004, "Your perl is new enough" );
-	use_ok('Config::Tiny');
-}
 is( $Config::Tiny::VERSION, $VERSION, 'Loaded correct version of Config::Tiny' );
 
 # Test trivial creation
-my $Trivial = Config::Tiny->new();
+my $Trivial = Config::Tiny->new;
 ok( $Trivial, '->new returns true' );
 ok( ref $Trivial, '->new returns a reference' );
 # Legitimate use of UNIVERSAL::isa
@@ -46,31 +43,33 @@ isa_ok( $Config, 'Config::Tiny' );
 my $expected = {
 	'_' => {
 		root => 'something',
-		},
+	},
 	section => {
 		one => 'two',
 		Foo => 'Bar',
 		this => 'Your Mother!',
 		blank => '',
-		},
+	},
 	'Section Two' => {
 		'something else' => 'blah',
 		'remove' => 'whitespace',
-		},
-	};
+	},
+};
 bless $expected, 'Config::Tiny';
 is_deeply( $Config, $expected, 'Config structure matches expected' );
 
 # Add some stuff to the trivial config and check write_string() for it
-$Trivial->{_} = { root1 => 'root2' };
+$Trivial->{_} = {
+	root1 => 'root2',
+};
 $Trivial->{section} = {
 	foo => 'bar',
 	this => 'that',
 	blank => '',
-	};
+};
 $Trivial->{section2} = {
 	'this little piggy' => 'went to market'
-	};
+};
 my $string = <<END;
 root1=root2
 
@@ -120,20 +119,18 @@ END {
 #####################################################################
 # Bugs that happened we don't want to happen again
 
-{
-# Reading in an empty file, or a defined but zero length string, should yield
-# a valid, but empty, object.
-my $Empty = Config::Tiny->read_string('');
-isa_ok( $Empty, 'Config::Tiny' );
-is( scalar(keys %$Empty), 0, 'Config::Tiny object from empty string, is empty' );
+SCOPE: {
+	# Reading in an empty file, or a defined but zero length string, should yield
+	# a valid, but empty, object.
+	my $Empty = Config::Tiny->read_string('');
+	isa_ok( $Empty, 'Config::Tiny' );
+	is( scalar(keys %$Empty), 0, 'Config::Tiny object from empty string, is empty' );
 }
 
-
-
-{
-# A Section header like [ section ] doesn't end up at ->{' section '}.
-# Trim off whitespace from the section header.
-my $string = <<'END';
+SCOPE: {
+	# A Section header like [ section ] doesn't end up at ->{' section '}.
+	# Trim off whitespace from the section header.
+	my $string = <<'END_CONFIG';
 # The need to trim off whitespace makes a lot more sense
 # when you are trying to maximise readability.
 [ /path/to/file.txt ]
@@ -145,14 +142,37 @@ this=that
 [section3 ]
 this=that
 
-END
+END_CONFIG
 
-my $Trim = Config::Tiny->read_string($string);
-isa_ok( $Trim, 'Config::Tiny' );
-ok( exists $Trim->{'/path/to/file.txt'}, 'First section created' );
-is( $Trim->{'/path/to/file.txt'}->{this}, 'that', 'First section created properly' );
-ok( exists $Trim->{section2}, 'Second section created' );
-is( $Trim->{section2}->{this}, 'that', 'Second section created properly' );
-ok( exists $Trim->{section3}, 'Third section created' );
-is( $Trim->{section3}->{this}, 'that', 'Third section created properly' );
+	my $Trim = Config::Tiny->read_string($string);
+	isa_ok( $Trim, 'Config::Tiny' );
+	ok( exists $Trim->{'/path/to/file.txt'}, 'First section created' );
+	is( $Trim->{'/path/to/file.txt'}->{this}, 'that', 'First section created properly' );
+	ok( exists $Trim->{section2}, 'Second section created' );
+	is( $Trim->{section2}->{this}, 'that', 'Second section created properly' );
+	ok( exists $Trim->{section3}, 'Third section created' );
+	is( $Trim->{section3}->{this}, 'that', 'Third section created properly' );
+}
+
+
+
+
+
+######################################################################
+# Refuse to write config files with newlines in them
+
+SCOPE: {
+	my $newline = Config::Tiny->new;
+	$newline->{_}->{string} = "foo\nbar";
+	local $@;
+	my $output = undef;
+	eval {
+		$output = $newline->write_string;
+	};
+	is( $output, undef, '->write_string returns undef on newlines' );
+	is(
+		Config::Tiny->errstr,
+		"Illegal newlines in property '_.string'",
+		'->errstr returns expected error',
+	);
 }
