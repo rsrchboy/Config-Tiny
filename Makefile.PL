@@ -21,7 +21,16 @@ WriteMakefile1(
 	NAME      => 'Config::Tiny',
 	ABSTRACT  => 'Read/Write .ini style files with as little code as possible',
 	VERSION   => $VERSION,
-	PREREQ_PM => { },
+	PREREQ_PM =>
+	{
+		'File::Temp' => 0.2301,
+		'Path::Tiny' => 0.025,
+		'perl'       => '5.14.2', # For the utf stuff.
+		'strict'     => 0,
+		'UNIVERSAL'  => 0,
+		'utf8'       => 0,
+		'vars'       => 0,
+	},
 	AUTHOR    => 'Adam Kennedy <adamk@cpan.org>',
 	LICENSE   => 'perl',
 );
