@@ -10,6 +10,8 @@ BEGIN {
 
 use Test::More tests => 33;
 use Config::Tiny ();
+use File::Temp;
+use Path::Tiny;
 use UNIVERSAL    ();
 
 use vars qw{$VERSION};
@@ -91,13 +93,18 @@ my $generated = $Trivial->write_string();
 ok( length $generated, '->write_string returns something' );
 ok( $generated eq $string, '->write_string returns the correct file contents' );
 
+# The EXLOCK option is for BSD-based systems.
+
+my($temp_dir)  = File::Temp -> newdir('temp.XXXX', CLEANUP => 1, EXLOCK => 0, TMPDIR => 1);
+my($temp_file) = path($temp_dir, 'write.test.conf');
+
 # Try to write a file
-my $rv = $Trivial->write( 'test2.conf' );
+my $rv = $Trivial->write($temp_file);
 ok( $rv, '->write returned true' );
-ok( -e 'test2.conf', '->write actually created a file' );
+ok( -e $temp_file, '->write actually created a file' );
 
 # Try to read the config back in
-$Read = Config::Tiny->read( 'test2.conf' );
+$Read = Config::Tiny->read( $temp_file );
 ok( $Read, '->read of what we wrote returns true' );
 ok( ref $Read, '->read of what we wrote returns a reference' );
 # Legitimate use of UNIVERSAL::isa
@@ -106,14 +113,6 @@ isa_ok( $Read, 'Config::Tiny' );
 
 # Check the structure of what we read back in
 is_deeply( $Read, $Trivial, 'What we read matches what we wrote out' );
-
-END {
-	# Clean up
-	unlink 'test2.conf';
-}
-
-
-
 
 
 #####################################################################

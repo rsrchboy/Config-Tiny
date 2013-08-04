@@ -31,7 +31,7 @@ sub read {
 	my $contents = <CFG>;
 	close( CFG );
 
-	$class->read_string( $contents );
+	return $class->read_string( $contents );
 }
 
 # Create an object from a string
@@ -90,6 +90,8 @@ sub write {
 		);
 	print CFG $string;
 	close CFG;
+
+	return 1;
 }
 
 # Save an object to a string
@@ -172,19 +174,25 @@ Config::Tiny - Read/Write .ini style files with as little code as possible
 
 C<Config::Tiny> is a Perl class to read and write .ini style configuration
 files with as little code as possible, reducing load time and memory
-overhead. Most of the time it is accepted that Perl applications use a lot
-of memory and modules. The C<::Tiny> family of modules is specifically
-intended to provide an ultralight alternative to the standard modules.
+overhead.
 
-This module is primarily for reading human written files, and anything we
-write shouldn't need to have documentation/comments. If you need something
-with more power move up to L<Config::Simple>, L<Config::General> or one of
-the many other C<Config::> modules. To rephrase, L<Config::Tiny> does B<not>
-preserve your comments, whitespace, or the order of your config file.
+Most of the time it is accepted that Perl applications use a lot
+of memory and modules.
+
+The C<*::Tiny> family of modules is specifically intended to provide an ultralight alternative to the
+standard modules.
+
+This module is primarily for reading human written files, and anything we write shouldn't need to have
+documentation/comments. If you need something with more power move up to L<Config::Simple>, L<Config::General>
+or one of the many other C<Config::*> modules.
+
+Lastly, L<Config::Tiny> does B<not> preserve your comments, whitespace, or the order of your config file.
+
+See L<Config::Tiny::Ordered> (and possibly others) for the preservation of the order of the entries in the file.
 
 =head1 CONFIGURATION FILE SYNTAX
 
-Files are the same format as for windows .ini files. For example:
+Files are the same format as for MS Windows C<*.ini> files. For example:
 
 	[section]
 	var1=value1
@@ -203,7 +211,13 @@ something better, this module is not for you.
 
 =head1 METHODS
 
-=head2 new
+=head2 errstr()
+
+Returns a string representing the most recent error, or the empty string.
+
+You can also retrieve the error message from the C<$Config::Tiny::errstr> variable.
+
+=head2 new()
 
 The constructor C<new> creates and returns an empty C<Config::Tiny> object.
 
@@ -224,7 +238,7 @@ cases a failed C<read> will also set the operating system error
 variable C<$!>, not all errors do and you should not rely on using
 the C<$!> variable.
 
-=head2 read_string $string;
+=head2 read_string($string)
 
 The C<read_string> method takes as argument the contents of a config file
 as a string and returns the C<Config::Tiny> object for it.
@@ -240,16 +254,21 @@ $encoding may be used to indicate the encoding of the file, e.g. 'utf8'.
 
 Returns true on success or C<undef> on error.
 
-=head2 write_string
+=head2 write_string()
 
 Generates the file content for the object and returns it as a string.
 
-=head2 errstr
-
-When an error occurs, you can retrieve the error message either from the
-C<$Config::Tiny::errstr> variable, or using the C<errstr()> method.
-
 =head1 FAQ
+
+=head2 Why can't I put comments at the ends of lines?
+
+Because a line like:
+
+	key=value # A comment
+
+Sets key to 'value # A comment' :-(.
+
+This conforms to the syntax discussed in L</CONFIGURATION FILE SYNTAX>.
 
 =head2 Why can't I omit the '=' signs?
 
@@ -261,7 +280,7 @@ E.g.:
 	of =
 	things =
 
-Instead of
+Instead of:
 
 	[Things]
 	my
@@ -269,8 +288,8 @@ Instead of
 	of
 	things
 
-Because the use of '=' signs is a type of mandatory documentation. It indicates that that config contains 4 items,
-and not 1 item split over 4 lines.
+Because the use of '=' signs is a type of mandatory documentation. It indicates that that section contains 4 items,
+and not 1 odd item split over 4 lines.
 
 =head1 CAVEATS
 
@@ -305,11 +324,13 @@ Adam Kennedy E<lt>adamk@cpan.orgE<gt>
 
 Thanks to Sherzod Ruzmetov E<lt>sherzodr@cpan.orgE<gt> for
 L<Config::Simple>, which inspired this module by being not quite
-"simple" enough for me :)
+"simple" enough for me :).
 
 =head1 SEE ALSO
 
-L<Config::Simple>, L<Config::General>, L<ali.as>
+See, amongst many: L<Config::Simple> and L<Config::General>.
+
+See L<Config::Tiny::Ordered> (and possibly others) for the preservation of the order of the entries in the file.
 
 =head1 COPYRIGHT
 
@@ -320,5 +341,7 @@ it and/or modify it under the same terms as Perl itself.
 
 The full text of the license can be found in the
 LICENSE file included with this module.
+
+Maintanence from V 2.15: Ron Savage L<http://savage.net.au/>.
 
 =cut

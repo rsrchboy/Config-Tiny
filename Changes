@@ -5,7 +5,13 @@ Revision history for Perl extension Config-Tiny
 	- Add a note under Caveats about setting options more that once. Only the first case is respected.
 		Thanx to Kimmel K. See RT#69795.
 	- Add a $encoding parameter to read_file() and write_file().
-		Thanx to Mark Lawrence. See RT#71029.
+		Add t/04.utf8.t and t/04.utf8.txt.
+		Thanx to Mark Lawrence and Wolfgang Husmann. See RT#71029 and RT#85571.
+	- For BSD-based systems, when writing a file, use:
+		my($temp_dir) = File::Temp -> newdir('temp.XXXX', CLEANUP => 1, EXLOCK => 0, TMPDIR => 1);
+	- Rename t/*.t files. I use '.' rather than '_' in file names because the latter is a shift char.
+	- Add MANIFEST.SKIP, Changelog.ini.
+	- Clean up the docs.
 
 2.14 Thu Mar 24 12:00:00 2011
 	- Resolved #63080: module can write multiline values but not read them
