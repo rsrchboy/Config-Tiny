@@ -13,5 +13,5 @@ EOS
 
 my($config) = Config::Tiny -> read_string($string);
 
-isa_ok($config, 'Config::Tiny', 'read_string() return object');
+isa_ok($config, 'Config::Tiny', 'read_string() returns an object');
 ok($$config{_}{param1} eq 'One', 'Access to hashref returns correct value');
