@@ -7,7 +7,7 @@ build_requires:
 configure_requires:
   ExtUtils::MakeMaker: 0
 dynamic_config: 0
-generated_by: 'ExtUtils::MakeMaker version 6.68, CPAN::Meta::Converter version 2.131560'
+generated_by: 'Module::Build version 0.4005, CPAN::Meta::Converter version 2.131560'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -21,7 +21,7 @@ requires:
   File::Temp: 0.2301
   Path::Tiny: 0.025
   UNIVERSAL: 0
-  perl: 5.008001
+  perl: v5.8.1
   strict: 0
   utf8: 0
   vars: 0
