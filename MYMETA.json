@@ -13,12 +13,6 @@
       "version" : "2"
    },
    "name" : "Config-Tiny",
-   "no_index" : {
-      "directory" : [
-         "t",
-         "inc"
-      ]
-   },
    "prereqs" : {
       "build" : {
          "requires" : {
@@ -27,7 +21,7 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "0"
+            "Module::Build" : "0.38"
          }
       },
       "runtime" : {
@@ -42,11 +36,17 @@
          }
       }
    },
+   "provides" : {
+      "Config::Tiny" : {
+         "file" : "lib/Config/Tiny.pm",
+         "version" : "2.15"
+      }
+   },
    "release_status" : "stable",
    "resources" : {
-      "repository" : {
-         "url" : "http://svn.ali.as/cpan/trunk/Config-Tiny"
-      }
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ]
    },
    "version" : "2.15"
 }
