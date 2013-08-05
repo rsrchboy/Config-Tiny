@@ -21,7 +21,7 @@ requires:
   File::Temp: 0.2301
   Path::Tiny: 0.025
   UNIVERSAL: 0
-  perl: v5.8.1
+  perl: 5.004
   strict: 0
   utf8: 0
   vars: 0

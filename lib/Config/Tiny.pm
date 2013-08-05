@@ -4,7 +4,7 @@ package Config::Tiny;
 
 use strict;
 BEGIN {
-	require 5.006000;
+	require 5.008001;
 	$Config::Tiny::VERSION = '2.15';
 	$Config::Tiny::errstr  = '';
 }
