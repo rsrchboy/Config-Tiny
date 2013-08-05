@@ -173,6 +173,8 @@ Config::Tiny - Read/Write .ini style files with as little code as possible
 	$Config->write( 'file.conf', 'utf8' );
 
 	# Shortcuts
+	my($rootproperty) = $$Config{_}{rootproperty};
+
 	my($config) = Config::Tiny -> read_string('alpha=bet');
 	my($value)  = $$config{_}{alpha}; # $value is 'bet'.
 
