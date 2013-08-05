@@ -172,6 +172,13 @@ Config::Tiny - Read/Write .ini style files with as little code as possible
 	$Config->write( 'file.conf' );
 	$Config->write( 'file.conf', 'utf8' );
 
+	# Shortcuts
+	my($config) = Config::Tiny -> read_string('alpha=bet');
+	my($value)  = $$config{_}{alpha}; # $value is 'bet'.
+
+	my($config) = Config::Tiny -> read_string("[init]\nalpha=bet");
+	my($value)  = $$config{init}{alpha}; # $value is 'bet'.
+
 =head1 DESCRIPTION
 
 C<Config::Tiny> is a Perl class to read and write .ini style configuration
