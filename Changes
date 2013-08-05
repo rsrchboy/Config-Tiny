@@ -1,4 +1,4 @@
-Revision history for Perl extension Config-Tiny
+Revision history for Perl extension Config-Tiny:
 
 2.15  Sun Aug  4 14:59:00 2013
 	- Clean up the shambolic dates in this file.
@@ -11,6 +11,7 @@ Revision history for Perl extension Config-Tiny
 		my($temp_dir) = File::Temp -> newdir('temp.XXXX', CLEANUP => 1, EXLOCK => 0, TMPDIR => 1);
 	- Rename t/*.t files. I use '.' rather than '_' in file names because the latter is a shift char.
 	- Add MANIFEST.SKIP, Changelog.ini.
+	- Add an FAQ to the docs.
 	- Clean up the docs.
 
 2.14 Thu Mar 24 12:00:00 2011
