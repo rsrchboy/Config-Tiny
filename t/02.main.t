@@ -14,12 +14,9 @@ use File::Temp;
 use Path::Tiny;
 use UNIVERSAL    ();
 
-use vars qw{$VERSION};
-BEGIN {
-	$VERSION = '2.15';
-}
+our $VERSION = '2.15';
 
-
+# --------------------
 
 # Check their perl version
 is( $Config::Tiny::VERSION, $VERSION, 'Loaded correct version of Config::Tiny' );

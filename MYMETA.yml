@@ -1,0 +1,30 @@
+---
+abstract: 'Read/Write .ini style files with as little code as possible'
+author:
+  - 'Adam Kennedy <adamk@cpan.org>'
+build_requires:
+  Test::More: 0.47
+configure_requires:
+  ExtUtils::MakeMaker: 0
+dynamic_config: 0
+generated_by: 'ExtUtils::MakeMaker version 6.68, CPAN::Meta::Converter version 2.131560'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Config-Tiny
+no_index:
+  directory:
+    - t
+    - inc
+requires:
+  File::Temp: 0.2301
+  Path::Tiny: 0.025
+  UNIVERSAL: 0
+  perl: 5.008001
+  strict: 0
+  utf8: 0
+  vars: 0
+resources:
+  repository: http://svn.ali.as/cpan/trunk/Config-Tiny
+version: 2.15

@@ -3,9 +3,9 @@ package Config::Tiny;
 # If you thought Config::Simple was small...
 
 use strict;
+our $VERSION = '2.15';
 BEGIN {
 	require 5.008001;
-	$Config::Tiny::VERSION = '2.15';
 	$Config::Tiny::errstr  = '';
 }
 
