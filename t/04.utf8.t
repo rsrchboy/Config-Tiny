@@ -34,7 +34,7 @@ is_deeply($conf1, {init => {weird_text => 'Reichwaldstraße'} }, 'read_string() 
 
 $conf1 -> write($temp_file, 'utf8');
 
-my($conf2) = Config::Tiny -> read($temp_file, 'utf8');
+my($conf2) = Config::Tiny -> read($temp_file, 'encoding(utf8)');
 
 is_deeply($conf1, $conf1, 'write() followed by read() works');
 is_deeply($conf2, {init => {weird_text => 'Reichwaldstraße'} }, 'write() + read() returns expected value');

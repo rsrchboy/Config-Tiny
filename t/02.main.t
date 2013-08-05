@@ -26,19 +26,19 @@ is( $Config::Tiny::VERSION, $VERSION, 'Loaded correct version of Config::Tiny' )
 
 # Test trivial creation
 my $Trivial = Config::Tiny->new;
-ok( $Trivial, '->new returns true' );
-ok( ref $Trivial, '->new returns a reference' );
+ok( $Trivial, 'new() returns true' );
+ok( ref $Trivial, 'new() returns a reference' );
 # Legitimate use of UNIVERSAL::isa
-ok( UNIVERSAL::isa( $Trivial, 'HASH' ), '->new returns a hash reference' );
+ok( UNIVERSAL::isa( $Trivial, 'HASH' ), 'new() returns a hash reference' );
 isa_ok( $Trivial, 'Config::Tiny' );
-ok( scalar keys %$Trivial == 0, '->new returns an empty object' );
+ok( scalar keys %$Trivial == 0, 'new() returns an empty object' );
 
 # Try to read in a config
 my $Config = Config::Tiny->read( 'test.conf' );
-ok( $Config, '->read returns true' );
-ok( ref $Config, '->read returns a reference' );
+ok( $Config, 'read() returns true' );
+ok( ref $Config, 'read() returns a reference' );
 # Legitimate use of UNIVERSAL::isa
-ok( UNIVERSAL::isa( $Config, 'HASH' ), '->read returns a hash reference' );
+ok( UNIVERSAL::isa( $Config, 'HASH' ), 'read() returns a hash reference' );
 isa_ok( $Config, 'Config::Tiny' );
 
 # Check the structure of the config
@@ -86,12 +86,12 @@ END
 
 # Test read_string
 my $Read = Config::Tiny->read_string( $string );
-ok( $Read, '->read_string returns true' );
-is_deeply( $Read, $Trivial, '->read_string returns expected value' );
+ok( $Read, 'read_string() returns true' );
+is_deeply( $Read, $Trivial, 'read_string() returns expected value' );
 
 my $generated = $Trivial->write_string();
-ok( length $generated, '->write_string returns something' );
-ok( $generated eq $string, '->write_string returns the correct file contents' );
+ok( length $generated, 'write_string() returns something' );
+ok( $generated eq $string, 'write_string() returns the correct file contents' );
 
 # The EXLOCK option is for BSD-based systems.
 
@@ -100,15 +100,15 @@ my($temp_file) = path($temp_dir, 'write.test.conf');
 
 # Try to write a file
 my $rv = $Trivial->write($temp_file);
-ok( $rv, '->write returned true' );
-ok( -e $temp_file, '->write actually created a file' );
+ok( $rv, 'write() returned true' );
+ok( -e $temp_file, 'write() actually created a file' );
 
 # Try to read the config back in
 $Read = Config::Tiny->read( $temp_file );
-ok( $Read, '->read of what we wrote returns true' );
-ok( ref $Read, '->read of what we wrote returns a reference' );
+ok( $Read, 'read() of what we wrote returns true' );
+ok( ref $Read, 'read() of what we wrote returns a reference' );
 # Legitimate use of UNIVERSAL::isa
-ok( UNIVERSAL::isa( $Read, 'HASH' ), '->read of what we wrote returns a hash reference' );
+ok( UNIVERSAL::isa( $Read, 'HASH' ), 'read() of what we wrote returns a hash reference' );
 isa_ok( $Read, 'Config::Tiny' );
 
 # Check the structure of what we read back in
@@ -168,10 +168,10 @@ SCOPE: {
 	eval {
 		$output = $newline->write_string;
 	};
-	is( $output, undef, '->write_string returns undef on newlines' );
+	is( $output, undef, 'write_string() returns undef on newlines' );
 	is(
 		Config::Tiny->errstr,
 		"Illegal newlines in property '_.string'",
-		'->errstr returns expected error',
+		'errstr() returns expected error',
 	);
 }

@@ -22,11 +22,12 @@ sub read {
 	return $class->_error( "'$file' is a directory, not a file" )       unless -f _;
 	return $class->_error( "Insufficient permissions to read '$file'" ) unless -r _;
 
-	# Slurp in the file
-	my($encoding) = shift;
-	$encoding     = $encoding ? "<:encoding($encoding)" : '<';
+	# Slurp in the file.
 
-	local $/ = undef;
+	my $encoding = shift;
+	$encoding    = $encoding ? "<:$encoding" : '<';
+	local $/     = undef;
+
 	open( CFG, $encoding, $file ) or return $class->_error( "Failed to open file '$file': $!" );
 	my $contents = <CFG>;
 	close( CFG );
@@ -79,8 +80,8 @@ sub write {
 	my $file = shift or return $self->_error(
 		'No file name provided'
 		);
-	my($encoding) = shift;
-	$encoding     = $encoding ? ">:encoding($encoding)" : '>';
+	my $encoding = shift;
+	$encoding    = $encoding ? ">:$encoding" : '>';
 
 	# Write it to the file
 	my $string = $self->write_string;
@@ -154,7 +155,8 @@ Config::Tiny - Read/Write .ini style files with as little code as possible
 
 	# Open the config
 	$Config = Config::Tiny->read( 'file.conf' );
-	$Config = Config::Tiny->read( 'file.conf', 'utf8' );
+	$Config = Config::Tiny->read( 'file.conf', 'utf8' ); # Neither ':' nor '<:' prefix.
+	$Config = Config::Tiny->read( 'file.conf', 'encoding(iso-8859-1)');
 
 	# Reading properties
 	my $rootproperty = $Config->{_}->{rootproperty};
@@ -228,7 +230,9 @@ Here, the [] indicate an optional parameter.
 The C<read> constructor reads a config file, $filename, and returns a new
 C<Config::Tiny> object containing the properties in the file.
 
-$encoding may be used to indicate the encoding of the file, e.g. 'utf8'.
+$encoding may be used to indicate the encoding of the file, e.g. 'utf8' or 'encoding(iso-8859-1)'.
+
+Do not add a prefix to $encoding, such as '<' or '<:'.
 
 Returns the object on success, or C<undef> on error.
 
@@ -250,7 +254,9 @@ Here, the [] indicate an optional parameter.
 The C<write> method generates the file content for the properties, and
 writes it to disk to the filename specified.
 
-$encoding may be used to indicate the encoding of the file, e.g. 'utf8'.
+$encoding may be used to indicate the encoding of the file, e.g. 'utf8' or 'encoding(iso-8859-1)'.
+
+Do not add a prefix to $encoding, such as '>' or '>:'.
 
 Returns true on success or C<undef> on error.
 
@@ -290,6 +296,25 @@ Instead of:
 
 Because the use of '=' signs is a type of mandatory documentation. It indicates that that section contains 4 items,
 and not 1 odd item split over 4 lines.
+
+=head2 Why do I have to assign the result of a method call to a variable?
+
+This question comes from RT#85386.
+
+Yes, the syntax may seem odd, but you don't have to call both new() and read_string().
+
+Try:
+
+	perl -MData::Dumper -MConfig::Tiny -E 'my $c=Config::Tiny->read_string("one=s"); say Dumper $c'
+
+Or:
+
+	my($config) = Config::Tiny -> read_string('alpha=bet');
+	my($value)  = $$config{_}{alpha}; # $value is 'bet'.
+
+Or even, a bit ridiculously:
+
+	my($value) = ${Config::Tiny -> read_string('alpha=bet')}{_}{alpha}; # $value is 'bet'.
 
 =head1 CAVEATS
 
