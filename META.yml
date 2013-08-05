@@ -1,24 +1,30 @@
---- #YAML:1.0
-name:               Config-Tiny
-version:            2.14
-abstract:           Read/Write .ini style files with as little code as possible
+---
+abstract: 'Read/Write .ini style files with as little code as possible'
 author:
-    - Adam Kennedy <adamk@cpan.org>
-license:            perl
-distribution_type:  module
-configure_requires:
-    ExtUtils::MakeMaker:  0
+  - 'Adam Kennedy <adamk@cpan.org>'
 build_requires:
-    Test::More:  0.47
-requires:
-    perl:  5.004
-resources:
-    repository:  http://svn.ali.as/cpan/trunk/Config-Tiny
-no_index:
-    directory:
-        - t
-        - inc
-generated_by:       ExtUtils::MakeMaker version 6.56
+  Test::More: 0.47
+configure_requires:
+  Module::Build: 0.38
+dynamic_config: 1
+generated_by: 'Module::Build version 0.4005, CPAN::Meta::Converter version 2.131560'
+license: perl
 meta-spec:
-    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
-    version:  1.4
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Config-Tiny
+provides:
+  Config::Tiny:
+    file: lib/Config/Tiny.pm
+    version: 2.15
+requires:
+  File::Temp: 0.2301
+  Path::Tiny: 0.025
+  UNIVERSAL: 0
+  perl: v5.8.1
+  strict: 0
+  utf8: 0
+  vars: 0
+resources:
+  license: http://dev.perl.org/licenses/
+version: 2.15

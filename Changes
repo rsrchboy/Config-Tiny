@@ -10,7 +10,7 @@ Revision history for Perl extension Config-Tiny:
 	- For BSD-based systems, when writing a file, use:
 		my($temp_dir) = File::Temp -> newdir('temp.XXXX', CLEANUP => 1, EXLOCK => 0, TMPDIR => 1);
 	- Rename t/*.t files. I use '.' rather than '_' in file names because the latter is a shift char.
-	- Add MANIFEST.SKIP, Changelog.ini.
+	- Add MANIFEST.SKIP, Changelog.ini, Build.PL, META.json.
 	- Add an FAQ to the docs.
 	- Clean up the docs.
 
