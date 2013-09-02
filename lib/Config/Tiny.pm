@@ -155,7 +155,7 @@ Config::Tiny - Read/Write .ini style files with as little code as possible
 
 	# Open the config
 	$Config = Config::Tiny->read( 'file.conf' );
-	$Config = Config::Tiny->read( 'file.conf', 'utf8' ); # Neither ':' nor '<:' prefix.
+	$Config = Config::Tiny->read( 'file.conf', 'utf8' ); # Neither ':' nor '<:' prefix!
 	$Config = Config::Tiny->read( 'file.conf', 'encoding(iso-8859-1)');
 
 	# Reading properties
@@ -170,7 +170,7 @@ Config::Tiny - Read/Write .ini style files with as little code as possible
 
 	# Save a config
 	$Config->write( 'file.conf' );
-	$Config->write( 'file.conf', 'utf8' );
+	$Config->write( 'file.conf', 'utf8' ); # Neither ':' nor '>:' prefix!
 
 	# Shortcuts
 	my($rootproperty) = $$Config{_}{rootproperty};
@@ -251,6 +251,8 @@ cases a failed C<read> will also set the operating system error
 variable C<$!>, not all errors do and you should not rely on using
 the C<$!> variable.
 
+See t/04.utf8.t and t/04.utf8.txt.
+
 =head2 read_string($string)
 
 The C<read_string> method takes as argument the contents of a config file
@@ -268,6 +270,8 @@ $encoding may be used to indicate the encoding of the file, e.g. 'utf8' or 'enco
 Do not add a prefix to $encoding, such as '>' or '>:'.
 
 Returns true on success or C<undef> on error.
+
+See t/04.utf8.t and t/04.utf8.txt.
 
 =head2 write_string()
 
@@ -354,6 +358,8 @@ For other issues, or commercial enhancement or support, contact the author.
 
 Adam Kennedy E<lt>adamk@cpan.orgE<gt>
 
+Maintanence from V 2.15: Ron Savage L<http://savage.net.au/>.
+
 =head1 ACKNOWLEGEMENTS
 
 Thanks to Sherzod Ruzmetov E<lt>sherzodr@cpan.orgE<gt> for
@@ -375,7 +381,5 @@ it and/or modify it under the same terms as Perl itself.
 
 The full text of the license can be found in the
 LICENSE file included with this module.
-
-Maintanence from V 2.15: Ron Savage L<http://savage.net.au/>.
 
 =cut
