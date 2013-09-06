@@ -22,6 +22,7 @@ WriteMakefile1(
 	VERSION   => $VERSION,
 	PREREQ_PM =>
 	{
+		'File::Spec' => 3.40,
 		'File::Temp' => 0.2301,
 		'Path::Tiny' => 0.025,
 		'perl'       => '5.8.1', # For the utf stuff.

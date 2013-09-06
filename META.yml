@@ -16,10 +16,10 @@ name: Config-Tiny
 provides:
   Config::Tiny:
     file: lib/Config/Tiny.pm
-    version: 2.15
+    version: 2.16
 requires:
+  File::Spec: 3.4
   File::Temp: 0.2301
-  Path::Tiny: 0.025
   UNIVERSAL: 0
   perl: v5.8.1
   strict: 0
@@ -27,4 +27,4 @@ requires:
   vars: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 2.15
+version: 2.16

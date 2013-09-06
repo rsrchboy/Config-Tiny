@@ -8,11 +8,14 @@ BEGIN {
 	$^W = 1;
 }
 
-use Test::More tests => 33;
 use Config::Tiny ();
+
+use File::Spec;
 use File::Temp;
-use Path::Tiny;
-use UNIVERSAL    ();
+
+use Test::More tests => 33;
+
+use UNIVERSAL ();
 
 our $VERSION = '2.15';
 
@@ -93,7 +96,7 @@ ok( $generated eq $string, 'write_string() returns the correct file contents' );
 # The EXLOCK option is for BSD-based systems.
 
 my($temp_dir)  = File::Temp -> newdir('temp.XXXX', CLEANUP => 1, EXLOCK => 0, TMPDIR => 1);
-my($temp_file) = path($temp_dir, 'write.test.conf');
+my($temp_file) = File::Spec -> catfile($temp_dir, 'write.test.conf');
 
 # Try to write a file
 my $rv = $Trivial->write($temp_file);

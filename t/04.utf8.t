@@ -2,9 +2,8 @@
 
 use Config::Tiny;
 
+use File::Spec;
 use File::Temp;
-
-use Path::Tiny;
 
 use Test::More tests => 7;
 
@@ -21,7 +20,7 @@ ok($$config{utf8_data}{Type}  eq 'Πηληϊάδεω Ἀχιλῆος', 'Hashref
 # The EXLOCK option is for BSD-based systems.
 
 my($temp_dir)  = File::Temp -> newdir('temp.XXXX', CLEANUP => 1, EXLOCK => 0, TMPDIR => 1);
-my($temp_file) = path($temp_dir, 'write.utf8.conf');
+my($temp_file) = File::Spec -> catfile($temp_dir, 'write.utf8.conf');
 my($string)    =<<EOS;
 [init]
 weird_text     = Reichwaldstraße

@@ -1,5 +1,10 @@
 Revision history for Perl extension Config-Tiny:
 
+2.16  Fri Sep  6 11:54:00 2013
+	- Replace Path::Tiny with File::Spec, because the former's list of dependencies is soooo long :-(.
+		Changed files: t/02.main.t, t/04.utf8.t, Build.PL and Makefile.PL.
+		See: RT#88435 (for Tree::DAG_Node) for an explanation.
+
 2.15  Sun Aug  4 14:59:00 2013
 	- Clean up the shambolic dates in this file.
 	- Add a note under Caveats about setting options more that once. Only the first case is respected.
