@@ -17,7 +17,7 @@ use Test::More tests => 33;
 
 use UNIVERSAL ();
 
-our $VERSION = '2.16';
+our $VERSION = '2.17';
 
 # --------------------
 

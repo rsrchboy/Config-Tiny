@@ -3,7 +3,7 @@ package Config::Tiny;
 # If you thought Config::Simple was small...
 
 use strict;
-our $VERSION = '2.16';
+our $VERSION = '2.17';
 BEGIN {
 	require 5.008001;
 	$Config::Tiny::errstr  = '';
@@ -15,12 +15,7 @@ sub new { bless {}, shift }
 # Create an object from a file
 sub read {
 	my $class = ref $_[0] ? ref shift : shift;
-
-	# Check the file
-	my $file = shift or return $class->_error( 'You did not specify a file name' );
-	return $class->_error( "File '$file' does not exist" )              unless -e $file;
-	return $class->_error( "'$file' is a directory, not a file" )       unless -f _;
-	return $class->_error( "Insufficient permissions to read '$file'" ) unless -r _;
+	my $file  = shift or return $class->_error('No file name provided');
 
 	# Slurp in the file.
 
@@ -28,7 +23,7 @@ sub read {
 	$encoding    = $encoding ? "<:$encoding" : '<';
 	local $/     = undef;
 
-	open( CFG, $encoding, $file ) or return $class->_error( "Failed to open file '$file': $!" );
+	open( CFG, $encoding, $file ) or return $class->_error( "Failed to open file '$file' for reading: $!" );
 	my $contents = <CFG>;
 	close( CFG );
 
@@ -76,10 +71,8 @@ sub read_string {
 
 # Save an object to a file
 sub write {
-	my $self = shift;
-	my $file = shift or return $self->_error(
-		'No file name provided'
-		);
+	my $self     = shift;
+	my $file     = shift or return $self->_error('No file name provided');
 	my $encoding = shift;
 	$encoding    = $encoding ? ">:$encoding" : '>';
 
