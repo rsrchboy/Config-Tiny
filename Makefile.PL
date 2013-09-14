@@ -5,7 +5,6 @@ BEGIN {
 use ExtUtils::MakeMaker;
 
 WriteMakefile1(
-	MIN_PERL_VERSION => '5.008001', #from Tiny.pm
 	META_MERGE => {
 		resources => {
 			repository => 'http://svn.ali.as/cpan/trunk/Config-Tiny',
@@ -16,10 +15,10 @@ WriteMakefile1(
 		# 0.47 means 5.6.2 or newer, which everyone on Win32 has.
 		($^O eq 'MSWin32' ? () : ('Test::More' => '0.47')),
 	},
-	NAME      => 'Config::Tiny',
-	ABSTRACT  => 'Read/Write .ini style files with as little code as possible',
-	VERSION   => $VERSION,
-	PREREQ_PM =>
+	NAME         => 'Config::Tiny',
+	ABSTRACT     => 'Read/Write .ini style files with as little code as possible',
+	VERSION_FROM => 'lib/Config/Tiny.pm',
+	PREREQ_PM    =>
 	{
 		'File::Spec' => 3.40,
 		'File::Temp' => 0.2301,
@@ -30,8 +29,8 @@ WriteMakefile1(
 		'utf8'       => 0,
 		'vars'       => 0,
 	},
-	AUTHOR    => 'Adam Kennedy <adamk@cpan.org>',
-	LICENSE   => 'perl',
+	AUTHOR  => 'Adam Kennedy <adamk@cpan.org>',
+	LICENSE => 'perl',
 );
 
 # Written by Alexandr Ciornii, version 0.20. Added by eumm-upgrade.

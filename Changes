@@ -1,5 +1,9 @@
 Revision history for Perl extension Config-Tiny:
 
+2.19  Sun Sep 15 09:16:00 2013
+	- Change VERSION => $VERSION in Makefile.PL to VERSION_FROM => 'lib/Config/Tiny.pm'.
+		Reported by Jean-Louis Morel. See RT#88670.
+
 2.18  Sat Sep 14 10:03:00 2013
 	- Remove obsolete and wrong version # from Makefile.PL.
 		Reported by Jean-Louis Morel. See RT#88658.
