@@ -1,5 +1,4 @@
 use strict;
-our $VERSION = '2.15';
 BEGIN {
 	require 5.008001;
 }

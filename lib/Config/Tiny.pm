@@ -3,7 +3,7 @@ package Config::Tiny;
 # If you thought Config::Simple was small...
 
 use strict;
-our $VERSION = '2.17';
+our $VERSION = '2.18'; # Also change version # in t/02.main.t.
 BEGIN {
 	require 5.008001;
 	$Config::Tiny::errstr  = '';
@@ -26,6 +26,8 @@ sub read {
 	open( CFG, $encoding, $file ) or return $class->_error( "Failed to open file '$file' for reading: $!" );
 	my $contents = <CFG>;
 	close( CFG );
+
+	return $class -> _error("Reading from '$file' returned undef") if (! defined $contents);
 
 	return $class->read_string( $contents );
 }

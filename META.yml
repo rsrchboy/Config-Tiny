@@ -16,7 +16,7 @@ name: Config-Tiny
 provides:
   Config::Tiny:
     file: lib/Config/Tiny.pm
-    version: 2.17
+    version: 2.18
 requires:
   File::Spec: 3.4
   File::Temp: 0.2301
@@ -27,4 +27,4 @@ requires:
   vars: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 2.17
+version: 2.18

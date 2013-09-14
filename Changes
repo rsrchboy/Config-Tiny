@@ -1,5 +1,11 @@
 Revision history for Perl extension Config-Tiny:
 
+2.18  Sat Sep 14 10:03:00 2013
+	- Remove obsolete and wrong version # from Makefile.PL.
+		Reported by Jean-Louis Morel. See RT#88658.
+	- Implement Kevin Ryde's suggestion to test if read() will return undef.
+		If so, set an error message and (still) return undef.
+
 2.17  Fri Sep 13 12:41:00 2013
 	- Remove the file tests -efr during calls to read(). The open() tests for any error.
 		Also, the -f test was reporting /dev/null as a directory, not a file.
