@@ -26,7 +26,6 @@ WriteMakefile1(
 		'strict'     => 0,
 		'UNIVERSAL'  => 0,
 		'utf8'       => 0,
-		'vars'       => 0,
 	},
 	AUTHOR  => 'Adam Kennedy <adamk@cpan.org>',
 	LICENSE => 'perl',

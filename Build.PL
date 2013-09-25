@@ -23,6 +23,5 @@ Module::Build -> new
 		'strict'     => 0,
 		'UNIVERSAL'  => 0,
 		'utf8'       => 0,
-		'vars'       => 0,
 	},
 ) -> create_build_script();
