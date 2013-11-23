@@ -7,7 +7,7 @@ build_requires:
   File::Temp: 0.22
   Test::More: 0.47
 configure_requires:
-  Module::Build: 0.38
+  Module::Build: 0.34
 dynamic_config: 0
 generated_by: 'Module::Build version 0.4005, CPAN::Meta::Converter version 2.131560'
 license: perl
