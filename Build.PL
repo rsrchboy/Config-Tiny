@@ -1,3 +1,6 @@
+use strict;
+use warnings;
+
 use Module::Build;
 
 Module::Build -> new
@@ -8,17 +11,17 @@ Module::Build -> new
 	dist_author    => 'Adam Kennedy <adamk@cpan.org>',
 	build_requires =>
 	{
-		Test::More => 0.47,
-#		Test::Pod  => 1.45, # Make it optional. See xt/pod.t
+		'File::Spec' => 3.30,
+		'File::Temp' => 0.22,
+		'Test::More' => 0.47,
+#		'Test::Pod'  => 1.45, # Make it optional. See xt/pod.t
 	},
 	configure_requires =>
 	{
-		 Module::Build => 0.3800,
+		 'Module::Build' => 0.3400,
 	},
 	requires =>
 	{
-		'File::Spec' => 3.40,
-		'File::Temp' => 0.2301,
 		'perl'       => '5.8.1', # For the utf stuff.
 		'strict'     => 0,
 		'UNIVERSAL'  => 0,

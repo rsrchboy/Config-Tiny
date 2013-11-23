@@ -1,4 +1,6 @@
 use strict;
+use warnings;
+
 BEGIN {
 	require 5.008001;
 }
@@ -20,8 +22,8 @@ WriteMakefile1(
 	VERSION_FROM => 'lib/Config/Tiny.pm',
 	PREREQ_PM    =>
 	{
-		'File::Spec' => 3.40,
-		'File::Temp' => 0.2301,
+		'File::Spec' => 3.30,
+		'File::Temp' => 0.22,
 		'perl'       => '5.8.1', # For the utf stuff.
 		'strict'     => 0,
 		'UNIVERSAL'  => 0,

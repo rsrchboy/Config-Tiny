@@ -3,9 +3,11 @@ abstract: 'Read/Write .ini style files with as little code as possible'
 author:
   - 'Adam Kennedy <adamk@cpan.org>'
 build_requires:
+  File::Spec: 3.3
+  File::Temp: 0.22
   Test::More: 0.47
 configure_requires:
-  Module::Build: 0.38
+  Module::Build: 0.34
 dynamic_config: 1
 generated_by: 'Module::Build version 0.4005, CPAN::Meta::Converter version 2.131560'
 license: perl
@@ -18,13 +20,10 @@ provides:
     file: lib/Config/Tiny.pm
     version: 2.19
 requires:
-  File::Spec: 3.4
-  File::Temp: 0.2301
   UNIVERSAL: 0
   perl: v5.8.1
   strict: 0
   utf8: 0
-  vars: 0
 resources:
   license: http://dev.perl.org/licenses/
 version: 2.19
