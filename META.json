@@ -38,7 +38,7 @@
    "provides" : {
       "Config::Tiny" : {
          "file" : "lib/Config/Tiny.pm",
-         "version" : "2.19"
+         "version" : "2.20"
       }
    },
    "release_status" : "stable",
@@ -47,5 +47,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "2.19"
+   "version" : "2.20"
 }

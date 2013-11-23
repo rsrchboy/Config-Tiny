@@ -3,7 +3,7 @@ package Config::Tiny;
 # If you thought Config::Simple was small...
 
 use strict;
-our $VERSION = '2.19'; # Also change version # in t/02.main.t.
+our $VERSION = '2.20'; # Also change version # in t/02.main.t.
 BEGIN {
 	require 5.008001;
 	$Config::Tiny::errstr  = '';
