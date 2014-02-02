@@ -1,138 +1,49 @@
-NAME
-    Config::Tiny - Read/Write .ini style files with as little code as
-    possible
+README file for Config::Tiny.
 
-SYNOPSIS
-        # In your configuration file
-        rootproperty=blah
+See also: Changes and Changelog.ini.
 
-        [section]
-        one=twp
-        three= four
-        Foo =Bar
-        empty=
+Warning: WinZip 8.1 and 9.0 both contain an 'accidental' bug which stops
+them recognizing POSIX-style directory structures in valid tar files.
+You are better off using a reliable tool such as InfoZip:
+ftp://ftp.info-zip.org/pub/infozip/
 
-        # In your program
-        use Config::Tiny;
+1 Installing from a Unix-like distro
+------------------------------------
+shell>gunzip Config-Tiny-2.20.tgz
+shell>tar mxvf Config-Tiny-2.20.tar
 
-        # Create a config
-        my $Config = Config::Tiny->new;
+On Unix-like systems, assuming you have installed Module::Build V 0.25+:
 
-        # Open the config
-        $Config = Config::Tiny->read( 'file.conf' );
+shell>perl Build.PL
+shell>./Build
+shell>./Build test
+shell>./Build install
 
-        # Reading properties
-        my $rootproperty = $Config->{_}->{rootproperty};
-        my $one = $Config->{section}->{one};
-        my $Foo = $Config->{section}->{Foo};
+On MS Windows-like systems, assuming you have installed Module::Build V 0.25+:
 
-        # Changing data
-        $Config->{newsection} = { this => 'that' }; # Add a section
-        $Config->{section}->{Foo} = 'Not Bar!';     # Change a value
-        delete $Config->{_};                        # Delete a value or section
+shell>perl Build.PL
+shell>perl Build
+shell>perl Build test
+shell>perl Build install
 
-        # Save a config
-        $Config->write( 'file.conf' );
+Alternately, without Module::Build, you do this:
 
-DESCRIPTION
-    "Config::Tiny" is a perl class to read and write .ini style
-    configuration files with as little code as possible, reducing load time
-    and memory overhead. Most of the time it is accepted that Perl
-    applications use a lot of memory and modules. The "::Tiny" family of
-    modules is specifically intended to provide an ultralight alternative to
-    the standard modules.
+Note: 'make' on MS Windows-like systems may be called 'nmake' or 'dmake'.
 
-    This module is primarily for reading human written files, and anything
-    we write shouldn't need to have documentation/comments. If you need
-    something with more power move up to Config::Simple, Config::General or
-    one of the many other "Config::" modules. To rephrase, Config::Tiny does
-    not preserve your comments, whitespace, or the order of your config
-    file.
+shell>perl Makefile.PL
+shell>make
+shell>make test
+shell>su              (for Unix-like systems)
+shell>make install
+shell>exit            (for Unix-like systems)
 
-CONFIGURATION FILE SYNTAX
-    Files are the same format as for windows .ini files. For example:
+On all systems:
 
-            [section]
-            var1=value1
-            var2=value2
+Run Tiny.pm through your favourite pod2html translator.
 
-    If a property is outside of a section at the beginning of a file, it
-    will be assigned to the "root section", available at "$Config->{_}".
-
-    Lines starting with '#' or ';' are considered comments and ignored, as
-    are blank lines.
-
-    When writing back to the config file, all comments, custom whitespace,
-    and the ordering of your config file elements is discarded. If you need
-    to keep the human elements of a config when writing back, upgrade to
-    something better, this module is not for you.
-
-METHODS
-  new
-    The constructor "new" creates and returns an empty "Config::Tiny"
-    object.
-
-  read $filename
-    The "read" constructor reads a config file, and returns a new
-    "Config::Tiny" object containing the properties in the file.
-
-    Returns the object on success, or "undef" on error.
-
-    When "read" fails, "Config::Tiny" sets an error message internally you
-    can recover via "Config::Tiny->errstr". Although in some cases a failed
-    "read" will also set the operating system error variable $!, not all
-    errors do and you should not rely on using the $! variable.
-
-  read_string $string;
-    The "read_string" method takes as argument the contents of a config file
-    as a string and returns the "Config::Tiny" object for it.
-
-  write $filename
-    The "write" method generates the file content for the properties, and
-    writes it to disk to the filename specified.
-
-    Returns true on success or "undef" on error.
-
-  write_string
-    Generates the file content for the object and returns it as a string.
-
-  errstr
-    When an error occurs, you can retrieve the error message either from the
-    $Config::Tiny::errstr variable, or using the "errstr()" method.
-
-CAVEATS
-  Unsupported Section Headers
-    Some edge cases in section headers are not support, and additionally may
-    not be detected when writing the config file.
-
-    Specifically, section headers with leading whitespace, trailing
-    whitespace, or newlines anywhere in the section header, will not be
-    written correctly to the file and may cause file corruption.
-
-SUPPORT
-    Bugs should be reported via the CPAN bug tracker at
-
-    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config-Tiny>
-
-    For other issues, or commercial enhancement or support, contact the
-    author.
-
-AUTHOR
-    Adam Kennedy <adamk@cpan.org>
-
-ACKNOWLEGEMENTS
-    Thanks to Sherzod Ruzmetov <sherzodr@cpan.org> for Config::Simple, which
-    inspired this module by being not quite "simple" enough for me :)
-
-SEE ALSO
-    Config::Simple, Config::General, ali.as
-
-COPYRIGHT
-    Copyright 2002 - 2011 Adam Kennedy.
-
-    This program is free software; you can redistribute it and/or modify it
-    under the same terms as Perl itself.
-
-    The full text of the license can be found in the LICENSE file included
-    with this module.
-
+2 Installing from an ActiveState distro
+---------------------------------------
+shell>unzip Config-Tiny-2.20.zip
+shell>ppm install --location=. Config-Tiny
+shell>del Config-Tiny-2.20.ppd
+shell>del PPM-Config-Tiny-2.20.tar.gz
