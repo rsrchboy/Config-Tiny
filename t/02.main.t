@@ -17,7 +17,9 @@ use Test::More tests => 33;
 
 use UNIVERSAL ();
 
-our $VERSION = '2.20';
+# Warning: There is another version line, in lib/Config/Tiny.pm.
+
+our $VERSION = '2.21';
 
 # --------------------
 

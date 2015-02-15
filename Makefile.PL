@@ -1,25 +1,41 @@
 use strict;
 use warnings;
 
-BEGIN {
-	require 5.008001;
-}
+require 5.008001;
+
 use ExtUtils::MakeMaker;
 
-WriteMakefile1(
-	META_MERGE => {
-		resources => {
-			repository => 'http://svn.ali.as/cpan/trunk/Config-Tiny',
-		},
+# ----------------------
+
+# See lib/ExtUtils/MakeMaker.pm for details of how to influence
+# the contents of the Makefile that is written.
+
+my(%params) =
+(
+	($] ge '5.005') ?
+	(
+		AUTHOR   => 'Adam Kennedy <adamk@cpan.org>',
+		ABSTRACT => 'Read/Write .ini style files with as little code as possible',
+	) : (),
+	clean =>
+	{
+		FILES => 'blib/* Makefile MANIFEST Config-Tiny-*'
 	},
-	BUILD_REQUIRES => {
+	dist =>
+	{
+		COMPRESS => 'gzip',
+		SUFFIX   => 'gz'
+	},
+	BUILD_REQUIRES =>
+	{
 		# Skip on Windows to avoid breaking ActivePerl PPMs
 		# 0.47 means 5.6.2 or newer, which everyone on Win32 has.
-		($^O eq 'MSWin32' ? () : ('Test::More' => '0.47')),
+		($^O eq 'MSWin32' ? () : ('Test::More' => '0.47') ),
 	},
+	DISTNAME     => 'Config-Tiny',
 	NAME         => 'Config::Tiny',
-	ABSTRACT     => 'Read/Write .ini style files with as little code as possible',
-	VERSION_FROM => 'lib/Config/Tiny.pm',
+	PL_FILES    => {},
+	LICENSE      => 'perl',
 	PREREQ_PM    =>
 	{
 		'File::Spec' => 3.30,
@@ -29,25 +45,36 @@ WriteMakefile1(
 		'UNIVERSAL'  => 0,
 		'utf8'       => 0,
 	},
-	AUTHOR  => 'Adam Kennedy <adamk@cpan.org>',
-	LICENSE => 'perl',
+	VERSION_FROM => 'lib/Config/Tiny.pm',
+	INSTALLDIRS  => 'site',
+	EXE_FILES    => [],
 );
 
-# Written by Alexandr Ciornii, version 0.20. Added by eumm-upgrade.
-sub WriteMakefile1 {
-	my %params = @_;
-	my $eumm_version = $ExtUtils::MakeMaker::VERSION;
-	$eumm_version = eval $eumm_version;
-	die "License not specified" if not exists $params{LICENSE};
-	if ($params{BUILD_REQUIRES} and $eumm_version < 6.5503) {
-		#EUMM 6.5502 has problems with BUILD_REQUIRES
-		$params{PREREQ_PM}={ %{$params{PREREQ_PM} || {}} , %{$params{BUILD_REQUIRES}} };
-		delete $params{BUILD_REQUIRES};
-	}
-	delete $params{MIN_PERL_VERSION} if $eumm_version < 6.48;
-	delete $params{META_MERGE} if $eumm_version < 6.46;
-	delete $params{LICENSE} if $eumm_version < 6.31;
-	delete $params{AUTHOR} if $] < 5.005;
-
-	WriteMakefile(%params);
+if ( ($ExtUtils::MakeMaker::VERSION =~ /^\d\.\d\d$/) && ($ExtUtils::MakeMaker::VERSION > 6.30) )
+{
+	$params{LICENSE} = 'artistic_2';
 }
+
+if ($ExtUtils::MakeMaker::VERSION ge '6.46')
+{
+	$params{META_MERGE} =
+	{
+		'meta-spec' =>
+		{
+			version => 2,
+		},
+		resources   =>
+		{
+			bugtracker => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Config-Tiny',
+			license    => 'http://opensource.org/licenses/Artistic-2.0',
+			repository =>
+			{
+				type => 'git',
+				url  => 'https://github.com/ronsavage/Config-Tiny.git',
+				web  => 'https://github.com/ronsavage/Config-Tiny',
+			},
+		},
+	};
+}
+
+WriteMakefile(%params);

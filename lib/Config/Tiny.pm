@@ -3,7 +3,11 @@ package Config::Tiny;
 # If you thought Config::Simple was small...
 
 use strict;
-our $VERSION = '2.20'; # Also change version # in t/02.main.t.
+
+# Warning: There is another version line, in t/02.main.t.
+
+our $VERSION = '2.21';
+
 BEGIN {
 	require 5.008001;
 	$Config::Tiny::errstr  = '';
@@ -185,16 +189,18 @@ overhead.
 Most of the time it is accepted that Perl applications use a lot
 of memory and modules.
 
-The C<*::Tiny> family of modules is specifically intended to provide an ultralight alternative to the
-standard modules.
+The C<*::Tiny> family of modules is specifically intended to provide an ultralight alternative
+to the standard modules.
 
-This module is primarily for reading human written files, and anything we write shouldn't need to have
-documentation/comments. If you need something with more power move up to L<Config::Simple>, L<Config::General>
-or one of the many other C<Config::*> modules.
+This module is primarily for reading human written files, and anything we write shouldn't need to
+have documentation/comments. If you need something with more power move up to L<Config::Simple>,
+L<Config::General> or one of the many other C<Config::*> modules.
 
-Lastly, L<Config::Tiny> does B<not> preserve your comments, whitespace, or the order of your config file.
+Lastly, L<Config::Tiny> does B<not> preserve your comments, whitespace, or the order of your config
+file.
 
-See L<Config::Tiny::Ordered> (and possibly others) for the preservation of the order of the entries in the file.
+See L<Config::Tiny::Ordered> (and possibly others) for the preservation of the order of the entries
+in the file.
 
 =head1 CONFIGURATION FILE SYNTAX
 
@@ -302,8 +308,8 @@ Instead of:
 	of
 	things
 
-Because the use of '=' signs is a type of mandatory documentation. It indicates that that section contains 4 items,
-and not 1 odd item split over 4 lines.
+Because the use of '=' signs is a type of mandatory documentation. It indicates that that section
+contains 4 items, and not 1 odd item split over 4 lines.
 
 =head2 Why do I have to assign the result of a method call to a variable?
 
@@ -365,7 +371,36 @@ L<Config::Simple>, which inspired this module by being not quite
 
 See, amongst many: L<Config::Simple> and L<Config::General>.
 
-See L<Config::Tiny::Ordered> (and possibly others) for the preservation of the order of the entries in the file.
+See L<Config::Tiny::Ordered> (and possibly others) for the preservation of the order of the entries
+in the file.
+
+L<IOD>. Ini On Drugs.
+
+L<IOD::Examples>
+
+L<App::IODUtils>
+
+L<Config::IOD::Reader>
+
+L<Config::Perl::V>. Config data from Perl itself.
+
+L<Config::Onion>
+
+L<Config::IniFiles>
+
+L<Config::INIPlus>
+
+L<Config::Hash>. Allows nested data.
+
+L<Config::MVP>. Author: RJBS. Uses Moose. Extremely complex.
+
+L<Config::TOML>. See next few lines:
+
+L<https://github.com/dlc/toml>
+
+L<https://github.com/alexkalderimis/config-toml.pl>. 1 Star rating.
+
+L<https://github.com/toml-lang/toml>
 
 =head1 COPYRIGHT
 
