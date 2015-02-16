@@ -1,6 +1,9 @@
 Revision history for Perl extension Config-Tiny:
 
-2.21  Mon Feb 16 08:59:00 2014
+2.22  Tue Feb 17 08:32:00 2015
+	- Fix licence info in Makefile.PL to say Perl.
+
+2.21  Mon Feb 16 08:59:00 2015
 	- Patch Makefile.PL to refer to the current repo, which is on github, and not the original one,
 		which is on Adam's web site. See RT#102125.
 	- Remove Build.PL because Karen Etheridge tells me Module::Build is no longer in core.

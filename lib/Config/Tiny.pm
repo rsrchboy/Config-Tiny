@@ -6,7 +6,7 @@ use strict;
 
 # Warning: There is another version line, in t/02.main.t.
 
-our $VERSION = '2.21';
+our $VERSION = '2.22';
 
 BEGIN {
 	require 5.008001;
