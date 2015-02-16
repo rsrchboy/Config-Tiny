@@ -19,7 +19,7 @@ use UNIVERSAL ();
 
 # Warning: There is another version line, in lib/Config/Tiny.pm.
 
-our $VERSION = '2.21';
+our $VERSION = '2.22';
 
 # --------------------
 
