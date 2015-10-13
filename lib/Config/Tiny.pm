@@ -6,122 +6,154 @@ use strict;
 
 # Warning: There is another version line, in t/02.main.t.
 
-our $VERSION = '2.22';
+our $VERSION = '2.23';
 
 BEGIN {
 	require 5.008001;
 	$Config::Tiny::errstr  = '';
 }
 
-# Create an empty object
-sub new { bless {}, shift }
+# Create an empty object.
 
-# Create an object from a file
-sub read {
-	my $class = ref $_[0] ? ref shift : shift;
-	my $file  = shift or return $class->_error('No file name provided');
+sub new { return bless {}, shift }
+
+# Create an object from a file.
+
+sub read
+{
+	my($class)           = ref $_[0] ? ref shift : shift;
+	my($file, $encoding) = @_;
+
+	return $class -> _error('No file name provided') if (! defined $file || ($file eq '') );
 
 	# Slurp in the file.
 
-	my $encoding = shift;
-	$encoding    = $encoding ? "<:$encoding" : '<';
-	local $/     = undef;
+	$encoding = $encoding ? "<:$encoding" : '<';
+	local $/  = undef;
 
-	open( CFG, $encoding, $file ) or return $class->_error( "Failed to open file '$file' for reading: $!" );
+	open( CFG, $encoding, $file ) or return $class -> _error( "Failed to open file '$file' for reading: $!" );
 	my $contents = <CFG>;
 	close( CFG );
 
 	return $class -> _error("Reading from '$file' returned undef") if (! defined $contents);
 
-	return $class->read_string( $contents );
-}
+	return $class -> read_string( $contents );
 
-# Create an object from a string
-sub read_string {
-	my $class = ref $_[0] ? ref shift : shift;
-	my $self  = bless {}, $class;
+} # End of read.
+
+# Create an object from a string.
+
+sub read_string
+{
+	my($class) = ref $_[0] ? ref shift : shift;
+	my($self)  = bless {}, $class;
+
 	return undef unless defined $_[0];
 
-	# Parse the file
+	# Parse the file.
+
 	my $ns      = '_';
 	my $counter = 0;
-	foreach ( split /(?:\015{1,2}\012|\015|\012)/, shift ) {
+
+	foreach ( split /(?:\015{1,2}\012|\015|\012)/, shift )
+	{
 		$counter++;
 
-		# Skip comments and empty lines
+		# Skip comments and empty lines.
+
 		next if /^\s*(?:\#|\;|$)/;
 
-		# Remove inline comments
+		# Remove inline comments.
+
 		s/\s\;\s.+$//g;
 
-		# Handle section headers
-		if ( /^\s*\[\s*(.+?)\s*\]\s*$/ ) {
+		# Handle section headers.
+
+		if ( /^\s*\[\s*(.+?)\s*\]\s*$/ )
+		{
 			# Create the sub-hash if it doesn't exist.
 			# Without this sections without keys will not
 			# appear at all in the completed struct.
+
 			$self->{$ns = $1} ||= {};
+
 			next;
 		}
 
-		# Handle properties
-		if ( /^\s*([^=]+?)\s*=\s*(.*?)\s*$/ ) {
+		# Handle properties.
+
+		if ( /^\s*([^=]+?)\s*=\s*(.*?)\s*$/ )
+		{
 			$self->{$ns}->{$1} = $2;
+
 			next;
 		}
 
-		return $self->_error( "Syntax error at line $counter: '$_'" );
+		return $self -> _error( "Syntax error at line $counter: '$_'" );
 	}
 
-	$self;
+	return $self;
 }
 
-# Save an object to a file
-sub write {
-	my $self     = shift;
-	my $file     = shift or return $self->_error('No file name provided');
-	my $encoding = shift;
-	$encoding    = $encoding ? ">:$encoding" : '>';
+# Save an object to a file.
 
-	# Write it to the file
-	my $string = $self->write_string;
+sub write
+{
+	my($self)            = shift;
+	my($file, $encoding) = @_;
+
+	return $self -> _error('No file name provided') if (! defined $file or ($file eq '') );
+
+	$encoding = $encoding ? ">:$encoding" : '>';
+
+	# Write it to the file.
+
+	my($string) = $self->write_string;
+
 	return undef unless defined $string;
-	open( CFG, $encoding, $file ) or return $self->_error(
-		"Failed to open file '$file' for writing: $!"
-		);
+
+	open( CFG, $encoding, $file ) or return $self->_error("Failed to open file '$file' for writing: $!");
 	print CFG $string;
 	close CFG;
 
 	return 1;
-}
 
-# Save an object to a string
-sub write_string {
-	my $self = shift;
+} # End of write.
 
-	my $contents = '';
-	foreach my $section ( sort { (($b eq '_') <=> ($a eq '_')) || ($a cmp $b) } keys %$self ) {
+# Save an object to a string.
+
+sub write_string
+{
+	my($self)     = shift;
+	my($contents) = '';
+
+	for my $section ( sort { (($b eq '_') <=> ($a eq '_')) || ($a cmp $b) } keys %$self )
+	{
 		# Check for several known-bad situations with the section
 		# 1. Leading whitespace
 		# 2. Trailing whitespace
-		# 3. Newlines in section name
-		return $self->_error(
-			"Illegal whitespace in section name '$section'"
-		) if $section =~ /(?:^\s|\n|\s$)/s;
+		# 3. Newlines in section name.
+
+		return $self->_error("Illegal whitespace in section name '$section'") if $section =~ /(?:^\s|\n|\s$)/s;
+
 		my $block = $self->{$section};
 		$contents .= "\n" if length $contents;
 		$contents .= "[$section]\n" unless $section eq '_';
-		foreach my $property ( sort keys %$block ) {
-			return $self->_error(
-				"Illegal newlines in property '$section.$property'"
-			) if $block->{$property} =~ /(?:\012|\015)/s;
+
+		for my $property ( sort keys %$block )
+		{
+			return $self->_error("Illegal newlines in property '$section.$property'") if $block->{$property} =~ /(?:\012|\015)/s;
+
 			$contents .= "$property=$block->{$property}\n";
 		}
 	}
 
-	$contents;
-}
+	return $contents;
 
-# Error handling
+} # End of write_string.
+
+# Error handling.
+
 sub errstr { $Config::Tiny::errstr }
 sub _error { $Config::Tiny::errstr = $_[1]; undef }
 
@@ -183,11 +215,9 @@ Config::Tiny - Read/Write .ini style files with as little code as possible
 =head1 DESCRIPTION
 
 C<Config::Tiny> is a Perl class to read and write .ini style configuration
-files with as little code as possible, reducing load time and memory
-overhead.
+files with as little code as possible, reducing load time and memory overhead.
 
-Most of the time it is accepted that Perl applications use a lot
-of memory and modules.
+Most of the time it is accepted that Perl applications use a lot of memory and modules.
 
 The C<*::Tiny> family of modules is specifically intended to provide an ultralight alternative
 to the standard modules.
@@ -329,6 +359,10 @@ Or:
 Or even, a bit ridiculously:
 
 	my($value) = ${Config::Tiny -> read_string('alpha=bet')}{_}{alpha}; # $value is 'bet'.
+
+=head2 Can I use a file called '0' (zero)?
+
+Yes. See t/05.zero.t (test code) and t/0 (test data).
 
 =head1 CAVEATS
 

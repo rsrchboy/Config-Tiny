@@ -1,4 +1,12 @@
-Revision history for Perl extension Config-Tiny:
+﻿Revision history for Perl extension Config-Tiny:
+
+2.23  Wed Oct 14 09:11:00 2015
+	- Add the utf8 BOM to this file. Let's hope the CPAN toolchain can cope. If it can't, another
+		version of the code will have to be released.
+	- Fix read() and write() so they work on files called '0' (zero). See RT#107754.
+		Many thanx to Григорий Кудренко for the report and patch.
+	- Add t/05.zero.t and t/0 to test the new code.
+	- Reformat the source slightly.
 
 2.22  Tue Feb 17 08:32:00 2015
 	- Fix licence info in Makefile.PL to say Perl.
