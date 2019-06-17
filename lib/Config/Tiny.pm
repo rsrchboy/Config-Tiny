@@ -407,6 +407,10 @@ Specifically, section headers with leading whitespace, trailing whitespace,
 or newlines anywhere in the section header, will not be written correctly
 to the file and may cause file corruption.
 
+=head1 Repository
+
+L<https://github.com/ronsavage/Config-Tiny.git>
+
 =head1 SUPPORT
 
 Bugs should be reported via the CPAN bug tracker at
