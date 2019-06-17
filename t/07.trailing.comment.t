@@ -2,7 +2,7 @@
 
 use Config::Tiny;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 
 # ------------------------
 
