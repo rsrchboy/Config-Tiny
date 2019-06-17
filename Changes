@@ -1,10 +1,21 @@
 ﻿Revision history for Perl extension Config-Tiny:
 
+2.24  Tue Jun 11 15:30:00 2019
+	- Delete from caveats in documentation where it used to say:
+		'Config::Tiny will only recognize the first time an option is set in a config file.'
+		'Any further attempts to set the same option later in the config file are ignored.'
+		In reality the code uses the 2nd and subsequent values to overwrite earlier values.
+	- Make this topic a new FAQ.
+	- Add corresponding test t/06.repeat.key.t.
+	- Update POD to clarify trailing comment options.
+	- Add corresponding test t/07.trailing.comment.t.
+	- Romanize Gregory Kidrenko's name so Config::IniFiles does not get 'Wide char in print'.
+
 2.23  Wed Oct 14 09:11:00 2015
 	- Add the utf8 BOM to this file. Let's hope the CPAN toolchain can cope. If it can't, another
 		version of the code will have to be released.
 	- Fix read() and write() so they work on files called '0' (zero). See RT#107754.
-		Many thanx to Григорий Кудренко for the report and patch.
+		Many thanx to Gregory Kidrenko for the report and patch.
 	- Add t/05.zero.t and t/0 to test the new code.
 	- Reformat the source slightly.
 
