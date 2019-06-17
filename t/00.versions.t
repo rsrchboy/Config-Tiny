@@ -24,7 +24,6 @@ my(@modules) = qw
 /
 	File::Spec
 	File::Temp
-	perl
 	strict
 	UNIVERSAL
 	utf8
