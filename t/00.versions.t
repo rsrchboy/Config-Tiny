@@ -5,19 +5,16 @@ use warnings;
 
 # I tried 'require'-ing modules but that did not work.
 
-use Tree; # For the version #.
+use Config::Tiny; # For the version #.
 
 use Test::More;
 
-use base;
-use constant;
-use Data::Dumper;
-use Exporter;
-use lib;
-use overload;
-use Scalar::Util;
+use File::Spec;
+use File::Temp;
+use perl;
 use strict;
-use warnings;
+use UNIVERSAL;
+use utf8;
 
 # ----------------------
 
@@ -25,10 +22,15 @@ pass('All external modules loaded');
 
 my(@modules) = qw
 /
+	File::Spec
+	File::Temp
+	perl
 	strict
+	UNIVERSAL
+	utf8
 /;
 
-diag "Testing Tree V $Tree::VERSION";
+diag "Testing Config::Tiny V $Config::Tiny::VERSION";
 
 for my $module (@modules)
 {
