@@ -11,7 +11,6 @@ use Test::More;
 
 use File::Spec;
 use File::Temp;
-use perl;
 use strict;
 use UNIVERSAL;
 use utf8;
@@ -24,7 +23,6 @@ my(@modules) = qw
 /
 	File::Spec
 	File::Temp
-	perl
 	strict
 	UNIVERSAL
 	utf8

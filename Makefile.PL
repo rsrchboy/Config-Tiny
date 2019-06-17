@@ -40,7 +40,6 @@ my(%params) =
 	{
 		'File::Spec' => 3.30,
 		'File::Temp' => 0.22,
-		'perl'       => '5.8.1', # For the utf stuff.
 		'strict'     => 0,
 		'UNIVERSAL'  => 0,
 		'utf8'       => 0,
