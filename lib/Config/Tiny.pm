@@ -9,7 +9,6 @@ use strict;
 our $VERSION = '2.24';
 
 BEGIN {
-	require 5.008001;
 	$Config::Tiny::errstr  = '';
 }
 

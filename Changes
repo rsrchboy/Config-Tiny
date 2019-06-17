@@ -13,6 +13,7 @@
 	- Move xt/pod.t to xt/author/pod.t.
  	- Adopt new repo structure. See
 		http://savage.net.au/Ron/html/My.Workflow.for.Building.Distros.html.
+	- Move require 5.008001 from Tiny.pm into Makefile.PL.
 
 2.23  2015-10-14T09:11:00
 	- Add the utf8 BOM to this file. Let's hope the CPAN toolchain can cope. If it can't, another
