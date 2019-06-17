@@ -10,6 +10,9 @@
 	- Update POD to clarify trailing comment options.
 	- Add corresponding test t/07.trailing.comment.t.
 	- Romanize Gregory Kidrenko's name so Config::IniFiles does not get 'Wide char in print'.
+	- Move xt/pod.t to xt/author/pod.t.
+ 	- Adopt new repo structure. See
+		http://savage.net.au/Ron/html/My.Workflow.for.Building.Distros.html.
 
 2.23  Wed Oct 14 09:11:00 2015
 	- Add the utf8 BOM to this file. Let's hope the CPAN toolchain can cope. If it can't, another
