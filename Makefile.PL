@@ -41,7 +41,6 @@ my(%params) =
 		'File::Spec' => 3.30,
 		'File::Temp' => 0.22,
 		'strict'     => 0,
-		'UNIVERSAL'  => 0,
 		'utf8'       => 0,
 	},
 	TEST_REQUIRES =>
