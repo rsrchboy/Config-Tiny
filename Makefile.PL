@@ -41,13 +41,11 @@ my(%params) =
 		'File::Spec' => 3.30,
 		'File::Temp' => 0.22,
 		'strict'     => 0,
-		'UNIVERSAL'  => 0,
 		'utf8'       => 0,
 	},
 	TEST_REQUIRES =>
 	{
 		'Test::More'	=> 1.001002,
-		'Test::Pod'		=> 1.51,
 	},
 	VERSION_FROM => 'lib/Config/Tiny.pm',
 	INSTALLDIRS  => 'site',
