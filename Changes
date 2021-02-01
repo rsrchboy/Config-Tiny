@@ -1,5 +1,8 @@
 ﻿Revision history for Perl extension Config-Tiny:
 
+2.25  2021-01-31T20:29:00
+	- Merge in clean-up patches from Karen Etheridge, with thanx.
+
 2.24  2019-06-11T15:30:00
 	- Delete from caveats in documentation where it used to say:
 		'Config::Tiny will only recognize the first time an option is set in a config file.'
