@@ -67,7 +67,10 @@ if ($ExtUtils::MakeMaker::VERSION ge '6.46')
 		},
 		resources   =>
 		{
-			bugtracker => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Config-Tiny',
+			bugtracker =>
+			{
+				web => 'https://github.com/ronsavage/Config-Tiny/issues',
+			},
 			license    => 'http://opensource.org/licenses/Perl',
 			repository =>
 			{

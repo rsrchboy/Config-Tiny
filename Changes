@@ -2,6 +2,8 @@
 
 2.25  2021-01-31T20:29:00
 	- Merge in clean-up patches from Karen Etheridge, with thanx.
+	- Add back file t/0. Who deleted it? It is required for t/05.zero.t.
+	- Update Makefile.PL to switch issue tracker from rt.cpan.org to github.
 
 2.24  2019-06-11T15:30:00
 	- Delete from caveats in documentation where it used to say:
