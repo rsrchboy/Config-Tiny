@@ -415,7 +415,7 @@ L<https://github.com/ronsavage/Config-Tiny.git>
 
 Bugs should be reported via the CPAN bug tracker at
 
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config-Tiny>
+L<https://github.com/ronsavage/Config-Tiny/issues>
 
 For other issues, or commercial enhancement or support, contact the author.
 
