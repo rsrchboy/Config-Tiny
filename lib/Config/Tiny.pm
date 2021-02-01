@@ -6,7 +6,7 @@ use strict;
 
 # Warning: There is another version line, in t/02.main.t.
 
-our $VERSION = '2.25';
+our $VERSION = '2.26';
 
 BEGIN {
 	require 5.008001; # For the utf8 stuff.
