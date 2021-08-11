@@ -20,7 +20,7 @@
 	- Add corresponding test t/07.trailing.comment.t.
 	- Romanize Gregory Kidrenko's name so Config::IniFiles does not get 'Wide char in print'.
 	- Move xt/pod.t to xt/author/pod.t.
- 	- Adopt new repo structure. See
+	- Adopt new repo structure. See
 		http://savage.net.au/Ron/html/My.Workflow.for.Building.Distros.html.
 	- Move require 5.008001 from Tiny.pm into Makefile.PL.
 
