@@ -17,26 +17,24 @@ my(%params) =
 	) : (),
 	clean =>
 	{
-		FILES => 'blib/* Makefile MANIFEST Config-Tiny-*'
+		FILES => 'blib/* Makefile MANIFEST Config-Tiny-*',
 	},
 	dist =>
 	{
 		COMPRESS	=> 'gzip',
-		SUFFIX		=> 'gz'
+		SUFFIX		=> 'gz',
 	},
 	BUILD_REQUIRES =>
 	{
 		# Skip on Windows to avoid breaking ActivePerl PPMs
 		# 0.47 means 5.6.2 or newer, which everyone on Win32 has.
-		($^O eq 'MSWin32' ? () : ('Test::More' ge'0.47') ),
+		($^O eq 'MSWin32' ? () : ('Test::More' ge '0.47') ),
 	},
 	DISTNAME			=> 'Config-Tiny',
 	EXE_FILES			=> [],
-	INSTALLDIRS			=> 'site',
-	MIN_PERL_VERSION	=> '5.008001', # For the utf8 stuff
+	MIN_PERL_VERSION	=> '5.008001',
 	NAME				=> 'Config::Tiny',
 	PL_FILES			=> {},
-	LICENSE				=> 'perl',
 	PREREQ_PM			=>
 	{
 		'File::Spec'	=> '3.30',
