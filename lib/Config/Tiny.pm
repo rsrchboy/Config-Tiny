@@ -31,9 +31,9 @@ sub read
 	$encoding = $encoding ? "<:$encoding" : '<';
 	local $/  = undef;
 
-	open( CFG, $encoding, $file ) or return $class -> _error( "Failed to open file '$file' for reading: $!" );
-	my $contents = <CFG>;
-	close( CFG );
+	open( my $CFG, $encoding, $file ) or return $class -> _error( "Failed to open file '$file' for reading: $!" );
+	my $contents = <$CFG>;
+	close( $CFG );
 
 	return $class -> _error("Reading from '$file' returned undef") if (! defined $contents);
 
@@ -112,9 +112,9 @@ sub write
 
 	return undef unless defined $string;
 
-	open( CFG, $encoding, $file ) or return $self->_error("Failed to open file '$file' for writing: $!");
-	print CFG $string;
-	close CFG;
+	open( my $CFG, $encoding, $file ) or return $self->_error("Failed to open file '$file' for writing: $!");
+	print $CFG $string;
+	close $CFG;
 
 	return 1;
 
