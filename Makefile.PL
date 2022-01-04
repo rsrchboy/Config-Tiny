@@ -10,7 +10,7 @@ use ExtUtils::MakeMaker;
 
 my(%params) =
 (
-	("$]" ge '5.005') ?
+	("$]" >= '5.005') ?
 	(
 		AUTHOR		=> 'Adam Kennedy <adamk@cpan.org>',
 		ABSTRACT	=> 'Read/Write .ini style files with as little code as possible',
@@ -28,7 +28,7 @@ my(%params) =
 	{
 		# Skip on Windows to avoid breaking ActivePerl PPMs
 		# 0.47 means 5.6.2 or newer, which everyone on Win32 has.
-		($^O eq 'MSWin32' ? () : ('Test::More' ge '0.47') ),
+		($^O eq 'MSWin32' ? () : ('Test::More' >= '0.47') ),
 	},
 	DISTNAME			=> 'Config-Tiny',
 	EXE_FILES			=> [],
