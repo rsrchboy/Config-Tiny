@@ -3,106 +3,157 @@ package Config::Tiny;
 # If you thought Config::Simple was small...
 
 use strict;
+use 5.008001; # For the utf8 stuff.
+
+# Warning: There is another version line, in t/02.main.t.
+
+our $VERSION = '2.28';
+
 BEGIN {
-	require 5.004;
-	$Config::Tiny::VERSION = '2.12';
 	$Config::Tiny::errstr  = '';
 }
 
-# Create an empty object
-sub new { bless {}, shift }
+# Create an object.
 
-# Create an object from a file
-sub read {
-	my $class = ref $_[0] ? ref shift : shift;
+sub new { return bless defined $_[1] ? $_[1] : {}, $_[0] }
 
-	# Check the file
-	my $file = shift or return $class->_error( 'You did not specify a file name' );
-	return $class->_error( "File '$file' does not exist" )              unless -e $file;
-	return $class->_error( "'$file' is a directory, not a file" )       unless -f _;
-	return $class->_error( "Insufficient permissions to read '$file'" ) unless -r _;
+# Create an object from a file.
 
-	# Slurp in the file
-	local $/ = undef;
-	open CFG, $file or return $class->_error( "Failed to open file '$file': $!" );
-	my $contents = <CFG>;
-	close CFG;
+sub read
+{
+	my($class)           = ref $_[0] ? ref shift : shift;
+	my($file, $encoding) = @_;
 
-	$class->read_string( $contents );
-}
+	return $class -> _error('No file name provided') if (! defined $file || ($file eq '') );
 
-# Create an object from a string
-sub read_string {
-	my $class = ref $_[0] ? ref shift : shift;
-	my $self  = bless {}, $class;
+	# Slurp in the file.
+
+	$encoding = $encoding ? "<:$encoding" : '<';
+	local $/  = undef;
+
+	open(my $CFG, $encoding, $file) or return $class -> _error( "Failed to open file '$file' for reading: $!" );
+	my $contents = <$CFG>;
+	close($CFG );
+
+	return $class -> _error("Reading from '$file' returned undef") if (! defined $contents);
+
+	return $class -> read_string( $contents );
+
+} # End of read.
+
+# Create an object from a string.
+
+sub read_string
+{
+	my($class) = ref $_[0] ? ref shift : shift;
+	my($self)  = bless {}, $class;
+
 	return undef unless defined $_[0];
 
-	# Parse the file
+	# Parse the file.
+
 	my $ns      = '_';
 	my $counter = 0;
-	foreach ( split /(?:\015{1,2}\012|\015|\012)/, shift ) {
+
+	foreach ( split /(?:\015{1,2}\012|\015|\012)/, shift )
+	{
 		$counter++;
 
-		# Skip comments and empty lines
+		# Skip comments and empty lines.
+
 		next if /^\s*(?:\#|\;|$)/;
 
-		# Remove inline comments
+		# Remove inline comments.
+
 		s/\s\;\s.+$//g;
 
-		# Handle section headers
-		if ( /^\s*\[\s*(.+?)\s*\]\s*$/ ) {
+		# Handle section headers.
+
+		if ( /^\s*\[\s*(.+?)\s*\]\s*$/ )
+		{
 			# Create the sub-hash if it doesn't exist.
 			# Without this sections without keys will not
 			# appear at all in the completed struct.
+
 			$self->{$ns = $1} ||= {};
+
 			next;
 		}
 
-		# Handle properties
-		if ( /^\s*([^=]+?)\s*=\s*(.*?)\s*$/ ) {
+		# Handle properties.
+
+		if ( /^\s*([^=]+?)\s*=\s*(.*?)\s*$/ )
+		{
 			$self->{$ns}->{$1} = $2;
+
 			next;
 		}
 
-		return $self->_error( "Syntax error at line $counter: '$_'" );
+		return $self -> _error( "Syntax error at line $counter: '$_'" );
 	}
 
-	$self;
+	return $self;
 }
 
-# Save an object to a file
-sub write {
-	my $self = shift;
-	my $file = shift or return $self->_error(
-		'No file name provided'
-		);
+# Save an object to a file.
 
-	# Write it to the file
-	open( CFG, '>' . $file ) or return $self->_error(
-		"Failed to open file '$file' for writing: $!"
-		);
-	print CFG $self->write_string;
-	close CFG;
-}
+sub write
+{
+	my($self)            = shift;
+	my($file, $encoding) = @_;
 
-# Save an object to a string
-sub write_string {
-	my $self = shift;
+	return $self -> _error('No file name provided') if (! defined $file or ($file eq '') );
 
-	my $contents = '';
-	foreach my $section ( sort { (($b eq '_') <=> ($a eq '_')) || ($a cmp $b) } keys %$self ) {
+	$encoding = $encoding ? ">:$encoding" : '>';
+
+	# Write it to the file.
+
+	my($string) = $self->write_string;
+
+	return undef unless defined $string;
+
+	open(my $CFG, $encoding, $file) or return $self->_error("Failed to open file '$file' for writing: $!");
+	print $CFG $string;
+	close($CFG);
+
+	return 1;
+
+} # End of write.
+
+# Save an object to a string.
+
+sub write_string
+{
+	my($self)     = shift;
+	my($contents) = '';
+
+	for my $section ( sort { (($b eq '_') <=> ($a eq '_')) || ($a cmp $b) } keys %$self )
+	{
+		# Check for several known-bad situations with the section
+		# 1. Leading whitespace
+		# 2. Trailing whitespace
+		# 3. Newlines in section name.
+
+		return $self->_error("Illegal whitespace in section name '$section'") if $section =~ /(?:^\s|\n|\s$)/s;
+
 		my $block = $self->{$section};
 		$contents .= "\n" if length $contents;
 		$contents .= "[$section]\n" unless $section eq '_';
-		foreach my $property ( sort keys %$block ) {
+
+		for my $property ( sort keys %$block )
+		{
+			return $self->_error("Illegal newlines in property '$section.$property'") if $block->{$property} =~ /(?:\012|\015)/s;
+
 			$contents .= "$property=$block->{$property}\n";
 		}
 	}
-	
-	$contents;
-}
 
-# Error handling
+	return $contents;
+
+} # End of write_string.
+
+# Error handling.
+
 sub errstr { $Config::Tiny::errstr }
 sub _error { $Config::Tiny::errstr = $_[1]; undef }
 
@@ -118,54 +169,77 @@ Config::Tiny - Read/Write .ini style files with as little code as possible
 
 =head1 SYNOPSIS
 
-    # In your configuration file
-    rootproperty=blah
+	# In your configuration file
+	rootproperty=blah
 
-    [section]
-    one=twp
-    three= four
-    Foo =Bar
-    empty=
+	[section]
+	one=twp
+	three= four
+	Foo =Bar
+	empty=
 
-    # In your program
-    use Config::Tiny;
+	# In your program
+	use Config::Tiny;
 
-    # Create a config
-    my $Config = Config::Tiny->new();
+	# Create an empty config
+	my $Config = Config::Tiny->new;
 
-    # Open the config
-    $Config = Config::Tiny->read( 'file.conf' );
+	# Create a config with data
+	my $config = Config::Tiny->new({
+		_ => { rootproperty => "Bar" },
+		section => { one => "value", Foo => 42 } });
 
-    # Reading properties
-    my $rootproperty = $Config->{_}->{rootproperty};
-    my $one = $Config->{section}->{one};
-    my $Foo = $Config->{section}->{Foo};
+	# Open the config
+	$Config = Config::Tiny->read( 'file.conf' );
+	$Config = Config::Tiny->read( 'file.conf', 'utf8' ); # Neither ':' nor '<:' prefix!
+	$Config = Config::Tiny->read( 'file.conf', 'encoding(iso-8859-1)');
 
-    # Changing data
-    $Config->{newsection} = { this => 'that' }; # Add a section
-    $Config->{section}->{Foo} = 'Not Bar!';     # Change a value
-    delete $Config->{_};                        # Delete a value or section
+	# Reading properties
+	my $rootproperty = $Config->{_}->{rootproperty};
+	my $one = $Config->{section}->{one};
+	my $Foo = $Config->{section}->{Foo};
 
-    # Save a config
-    $Config->write( 'file.conf' );
+	# Changing data
+	$Config->{newsection} = { this => 'that' }; # Add a section
+	$Config->{section}->{Foo} = 'Not Bar!';     # Change a value
+	delete $Config->{_};                        # Delete a value or section
+
+	# Save a config
+	$Config->write( 'file.conf' );
+	$Config->write( 'file.conf', 'utf8' ); # Neither ':' nor '>:' prefix!
+
+	# Shortcuts
+	my($rootproperty) = $$Config{_}{rootproperty};
+
+	my($config) = Config::Tiny -> read_string('alpha=bet');
+	my($value)  = $$config{_}{alpha}; # $value is 'bet'.
+
+	my($config) = Config::Tiny -> read_string("[init]\nalpha=bet");
+	my($value)  = $$config{init}{alpha}; # $value is 'bet'.
 
 =head1 DESCRIPTION
 
-C<Config::Tiny> is a perl class to read and write .ini style configuration
-files with as little code as possible, reducing load time and memory
-overhead. Most of the time it is accepted that Perl applications use a lot
-of memory and modules. The C<::Tiny> family of modules is specifically
-intended to provide an ultralight alternative to the standard modules.
+C<Config::Tiny> is a Perl class to read and write .ini style configuration
+files with as little code as possible, reducing load time and memory overhead.
 
-This module is primarily for reading human written files, and anything we
-write shouldn't need to have documentation/comments. If you need something
-with more power move up to L<Config::Simple>, L<Config::General> or one of
-the many other C<Config::> modules. To rephrase, L<Config::Tiny> does B<not>
-preserve your comments, whitespace, or the order of your config file.
+Most of the time it is accepted that Perl applications use a lot of memory and modules.
+
+The C<*::Tiny> family of modules is specifically intended to provide an ultralight alternative
+to the standard modules.
+
+This module is primarily for reading human written files, and anything we write shouldn't need to
+have documentation/comments. If you need something with more power move up to L<Config::Simple>,
+L<Config::General> or one of the many other C<Config::*> modules.
+
+Lastly, L<Config::Tiny> does B<not> preserve your comments, whitespace, or the order of your config
+file.
+
+See L<Config::Tiny::Ordered> (and possibly others) for the preservation of the order of the entries
+in the file.
 
 =head1 CONFIGURATION FILE SYNTAX
 
-Files are the same format as for windows .ini files. For example:
+Files are the same format as for MS Windows C<*.ini> files. For example:
 
 	[section]
 	var1=value1
@@ -178,65 +252,182 @@ Lines starting with C<'#'> or C<';'> are considered comments and ignored,
 as are blank lines.
 
 When writing back to the config file, all comments, custom whitespace,
-and the ordering of your config file elements is discarded. If you need
+and the ordering of your config file elements are discarded. If you need
 to keep the human elements of a config when writing back, upgrade to
 something better, this module is not for you.
 
 =head1 METHODS
 
-=head2 new
+=head2 errstr()
 
-The constructor C<new> creates and returns an empty C<Config::Tiny> object.
+Returns a string representing the most recent error, or the empty string.
 
-=head2 read $filename
+You can also retrieve the error message from the C<$Config::Tiny::errstr> variable.
 
-The C<read> constructor reads a config file, and returns a new
-C<Config::Tiny> object containing the properties in the file. 
+=head2 new([$config])
+
+Here, the [] indicate an optional parameter.
+
+The constructor C<new> creates and returns a C<Config::Tiny> object.
+
+This will normally be a new, empty configuration, but you may also pass a
+hashref here which will be turned into an object of this class. This hashref
+should have a structure suitable for a configuration file, that is, a hash of
+hashes where the key C<_> is treated specially as the root section.
+
+=head2 read($filename, [$encoding])
+
+Here, the [] indicate an optional parameter.
+
+The C<read> constructor reads a config file, $filename, and returns a new
+C<Config::Tiny> object containing the properties in the file.
+
+$encoding may be used to indicate the encoding of the file, e.g. 'utf8' or 'encoding(iso-8859-1)'.
+
+Do not add a prefix to $encoding, such as '<' or '<:'.
 
 Returns the object on success, or C<undef> on error.
 
 When C<read> fails, C<Config::Tiny> sets an error message internally
-you can recover via C<<Config::Tiny->errstr>>. Although in B<some>
+you can recover via C<Config::Tiny-E<gt>errstr>. Although in B<some>
 cases a failed C<read> will also set the operating system error
 variable C<$!>, not all errors do and you should not rely on using
 the C<$!> variable.
 
-=head2 read_string $string;
+See t/04.utf8.t and t/04.utf8.txt.
+
+=head2 read_string($string)
 
 The C<read_string> method takes as argument the contents of a config file
 as a string and returns the C<Config::Tiny> object for it.
 
-=head2 write $filename
+=head2 write($filename, [$encoding])
+
+Here, the [] indicate an optional parameter.
 
 The C<write> method generates the file content for the properties, and
 writes it to disk to the filename specified.
 
+$encoding may be used to indicate the encoding of the file, e.g. 'utf8' or 'encoding(iso-8859-1)'.
+
+Do not add a prefix to $encoding, such as '>' or '>:'.
+
 Returns true on success or C<undef> on error.
 
-=head2 write_string
+See t/04.utf8.t and t/04.utf8.txt.
+
+=head2 write_string()
 
 Generates the file content for the object and returns it as a string.
 
-=head2 errstr
+=head1 FAQ
 
-When an error occurs, you can retrieve the error message either from the
-C<$Config::Tiny::errstr> variable, or using the C<errstr()> method.
+=head2 What happens if a key is repeated?
 
-=head2 property_string
+The last value is retained, overwriting any previous values.
 
-This method is called to produce the string used to represent the property in a
-section.  It is passed the section name and property name.
+See t/06.repeat.key.t.
 
-=head2 set
+=head2 Why can't I put comments at the ends of lines?
 
-This is a convenience is called to set a value found in the parsed config string.  It is
-passed the section name, property name, and value.
+=over 4
+
+=item o The # char is only introduces a comment when it's at the start of a line.
+
+So a line like:
+
+	key=value # A comment
+
+Sets key to 'value # A comment', which, presumably, you did not intend.
+
+This conforms to the syntax discussed in L</CONFIGURATION FILE SYNTAX>.
+
+=item o Comments matching /\s\;\s.+$//g; are ignored.
+
+This means you can't preserve the suffix using:
+
+	key = Prefix ; Suffix
+
+Result: key is now 'Prefix'.
+
+But you can do this:
+
+	key = Prefix;Suffix
+
+Result: key is now 'Prefix;Suffix'.
+
+Or this:
+
+	key = Prefix; Suffix
+
+Result: key is now 'Prefix; Suffix'.
+
+=back
+
+See t/07.trailing.comment.t.
+
+=head2 Why can't I omit the '=' signs?
+
+E.g.:
+
+	[Things]
+	my =
+	list =
+	of =
+	things =
+
+Instead of:
+
+	[Things]
+	my
+	list
+	of
+	things
+
+Because the use of '=' signs is a type of mandatory documentation. It indicates that that section
+contains 4 items, and not 1 odd item split over 4 lines.
+
+=head2 Why do I have to assign the result of a method call to a variable?
+
+This question comes from RT#85386.
+
+Yes, the syntax may seem odd, but you don't have to call both new() and read_string().
+
+Try:
+
+	perl -MData::Dumper -MConfig::Tiny -E 'my $c=Config::Tiny->read_string("one=s"); say Dumper $c'
+
+Or:
+
+	my($config) = Config::Tiny -> read_string('alpha=bet');
+	my($value)  = $$config{_}{alpha}; # $value is 'bet'.
+
+Or even, a bit ridiculously:
+
+	my($value) = ${Config::Tiny -> read_string('alpha=bet')}{_}{alpha}; # $value is 'bet'.
+
+=head2 Can I use a file called '0' (zero)?
+
+Yes. See t/05.zero.t (test code) and t/0 (test data).
+
+=head1 CAVEATS
+
+Some edge cases in section headers are not supported, and additionally may not
+be detected when writing the config file.
+
+Specifically, section headers with leading whitespace, trailing whitespace,
+or newlines anywhere in the section header, will not be written correctly
+to the file and may cause file corruption.
+
+=head1 Repository
+
+L<https://github.com/ronsavage/Config-Tiny.git>
 
 =head1 SUPPORT
 
 Bugs should be reported via the CPAN bug tracker at
 
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config-Tiny>
+L<https://github.com/ronsavage/Config-Tiny/issues>
 
 For other issues, or commercial enhancement or support, contact the author.
 
@@ -244,19 +435,52 @@ For other issues, or commercial enhancement or support, contact the author.
 
 Adam Kennedy E<lt>adamk@cpan.orgE<gt>
 
+Maintanence from V 2.15: Ron Savage L<http://savage.net.au/>.
+
 =head1 ACKNOWLEGEMENTS
 
 Thanks to Sherzod Ruzmetov E<lt>sherzodr@cpan.orgE<gt> for
 L<Config::Simple>, which inspired this module by being not quite
-"simple" enough for me :)
+"simple" enough for me :).
 
 =head1 SEE ALSO
 
-L<Config::Simple>, L<Config::General>, L<ali.as>
+See, amongst many: L<Config::Simple> and L<Config::General>.
+
+See L<Config::Tiny::Ordered> (and possibly others) for the preservation of the order of the entries
+in the file.
+
+L<IOD>. Ini On Drugs.
+
+L<IOD::Examples>
+
+L<App::IODUtils>
+
+L<Config::IOD::Reader>
+
+L<Config::Perl::V>. Config data from Perl itself.
+
+L<Config::Onion>
+
+L<Config::IniFiles>
+
+L<Config::INIPlus>
+
+L<Config::Hash>. Allows nested data.
+
+L<Config::MVP>. Author: RJBS. Uses Moose. Extremely complex.
+
+L<Config::TOML>. See next few lines:
+
+L<https://github.com/dlc/toml>
+
+L<https://github.com/alexkalderimis/config-toml.pl>. 1 Star rating.
+
+L<https://github.com/toml-lang/toml>
 
 =head1 COPYRIGHT
 
-Copyright 2002 - 2007 Adam Kennedy.
+Copyright 2002 - 2011 Adam Kennedy.
 
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
