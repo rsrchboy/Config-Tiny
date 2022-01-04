@@ -6,7 +6,7 @@ use strict;
 
 # Warning: There is another version line, in t/02.main.t.
 
-our $VERSION = '2.27';
+our $VERSION = '2.28';
 
 BEGIN {
 	require 5.008001; # For the utf8 stuff.
@@ -31,9 +31,9 @@ sub read
 	$encoding = $encoding ? "<:$encoding" : '<';
 	local $/  = undef;
 
-	open( my $CFG, $encoding, $file ) or return $class -> _error( "Failed to open file '$file' for reading: $!" );
+	open(my $CFG, $encoding, $file) or return $class -> _error( "Failed to open file '$file' for reading: $!" );
 	my $contents = <$CFG>;
-	close( $CFG );
+	close($CFG );
 
 	return $class -> _error("Reading from '$file' returned undef") if (! defined $contents);
 
@@ -112,9 +112,9 @@ sub write
 
 	return undef unless defined $string;
 
-	open( my $CFG, $encoding, $file ) or return $self->_error("Failed to open file '$file' for writing: $!");
+	open(my $CFG, $encoding, $file) or return $self->_error("Failed to open file '$file' for writing: $!");
 	print $CFG $string;
-	close $CFG;
+	close($CFG);
 
 	return 1;
 
