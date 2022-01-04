@@ -3,13 +3,13 @@ package Config::Tiny;
 # If you thought Config::Simple was small...
 
 use strict;
+use 5.008001; # For the utf8 stuff.
 
 # Warning: There is another version line, in t/02.main.t.
 
-our $VERSION = '2.28';
+our $VERSION = '2.29';
 
 BEGIN {
-	require 5.008001; # For the utf8 stuff.
 	$Config::Tiny::errstr  = '';
 }
 
