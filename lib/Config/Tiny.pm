@@ -84,6 +84,14 @@ sub read_string
 
 		if ( /^\s*([^=]+?)\s*=\s*(.*?)\s*$/ )
 		{
+			if ( substr($1, -2) eq '[]' )
+			{
+				my $k = substr $1, 0, -2;
+				$self->{$ns}->{$k} ||= [ ];
+				return $self -> _error ("Can't mix arrays and scalars at line $counter" ) unless ref $self->{$ns}->{$k} eq 'ARRAY';
+				push @{$self->{$ns}->{$k}}, $2;
+				next;
+			}
 			$self->{$ns}->{$1} = $2;
 
 			next;
@@ -144,6 +152,13 @@ sub write_string
 		{
 			return $self->_error("Illegal newlines in property '$section.$property'") if $block->{$property} =~ /(?:\012|\015)/s;
 
+			if (ref $block->{$property} eq 'ARRAY') {
+				for my $element ( @{$block->{$property}} )
+				{
+					$contents .= "${property}[]=$element\n";
+				}
+				next;
+			}
 			$contents .= "$property=$block->{$property}\n";
 		}
 	}

@@ -50,6 +50,7 @@ my $expected = {
 		one => 'two',
 		Foo => 'Bar',
 		this => 'Your Mother!',
+		array => [ 'foo', 'bar' ],
 		blank => '',
 	},
 	'Section Two' => {
