@@ -17,7 +17,7 @@ use Test::More tests => 33;
 
 # Warning: There is another version line, in lib/Config/Tiny.pm.
 
-our $VERSION = '2.29';
+our $VERSION = '2.30';
 
 # --------------------
 
@@ -47,11 +47,14 @@ my $expected = {
 		root => 'something',
 	},
 	section => {
-		one => 'two',
 		Foo => 'Bar',
-		this => 'Your Mother!',
-		array => [ 'foo', 'bar' ],
 		blank => '',
+		greetings => [
+			"Hello",
+			"World!",
+		],
+		one => 'two',
+		this => 'Your Mother!',
 	},
 	'Section Two' => {
 		'something else' => 'blah',
@@ -176,3 +179,4 @@ SCOPE: {
 		'errstr() returns expected error',
 	);
 }
+
